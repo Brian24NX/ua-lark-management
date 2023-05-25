@@ -25,6 +25,24 @@
 
 <!--      </template>-->
 
+
+      <div style="width: 120px; margin-right: 20px">
+        <el-select
+          v-model="selectLang"
+          :placeholder="$t('pleaseSelect')"
+          @change="changeLangEvent(selectLang)"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+      </div>
+
+
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
           <span>{{$store.state.user.userData.nickName}}</span>
@@ -57,8 +75,29 @@ import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
+import Cookies from 'js-cookie'
 
 export default {
+  data() {
+    return {
+      options: [
+        {
+          value: 'en',
+          label: 'English'
+        },
+        {
+          value: 'zh',
+          label: '简体中文'
+        },
+        // {
+        //   value: 'ko',
+        //   label: '한국어'
+        // }
+      ],
+      selectLang: '',
+      token: this.$store.state.user.token,
+    }
+  },
   components: {
     Breadcrumb,
     TopNav,
@@ -92,7 +131,31 @@ export default {
       }
     }
   },
+  created() {
+    this.selectLang = this.getLanguage()
+  },
   methods: {
+    changeLangEvent(e) {
+      this.selectLang = e
+      this.$i18n.locale = this.selectLang
+      Cookies.set('localeLang', this.selectLang)
+      window.location.reload()
+    },
+    getLanguage() {
+      const chooseLanguage = Cookies.get('localeLang')
+      if (chooseLanguage) return chooseLanguage
+      const language = (
+        navigator.language || navigator.browserLanguage
+      ).toLowerCase()
+      const locales = ['en', 'zh', 'ko']
+      for (const locale of locales) {
+        if (language.indexOf(locale) > -1) {
+          return locale
+        }
+      }
+      return 'en'
+    },
+
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
@@ -151,6 +214,7 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
+    display: flex;
 
     &:focus {
       outline: none;

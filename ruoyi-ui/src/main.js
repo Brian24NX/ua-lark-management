@@ -12,6 +12,7 @@ import store from './store'
 import router from './router'
 import directive from './directive' // directive
 import plugins from './plugins' // plugins
+import i18n from './lang' // in8n
 import { download } from '@/utils/request'
 
 import './assets/icons' // icon
@@ -73,7 +74,8 @@ DictData.install()
  */
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'small' // set element-ui default size
+  size: Cookies.get('size') || 'small', // set element-ui default size
+  i18n: (key, value) => i18n.t(key, value) // set element-ui il8n
 })
 
 Vue.config.productionTip = false
@@ -82,5 +84,6 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   render: h => h(App)
 })
