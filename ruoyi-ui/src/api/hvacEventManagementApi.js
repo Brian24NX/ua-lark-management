@@ -1,4 +1,4 @@
-import request from '@/utils/hvacRequest'
+import request from '@/utils/request'
 
 export function getProvinceListServe(parentId) {
   return request({

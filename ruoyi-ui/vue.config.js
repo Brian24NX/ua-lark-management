@@ -37,7 +37,7 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
        // target: 'http://localhost:8080',   http://47.101.59.251
        //  target: process.env.NODE_ENV === 'development' ? 'http://47.101.59.251/ruoyi-admin-api' : 'http://localhost:8080',
-        target: 'https://uat-wecom.carrier.cn',
+        target: 'https://uat-wecom.carrier.cn/carrier-admin-api',
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {

@@ -1,4 +1,4 @@
-import request from '@/utils/hvacRequest'
+import request from '@/utils/request'
 
 //   import { faqList, faqAdd, faqDel, faqEdit, faqDetail, faqEditRelations, faqActive } from '@/api/faq'
 

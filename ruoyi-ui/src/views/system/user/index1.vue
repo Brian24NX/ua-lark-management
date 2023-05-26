@@ -3,7 +3,7 @@
     <div class="pageCont">
       <el-row :gutter="20">
         <!--部门数据-->
-        <el-col style="width: 280px;">
+        <el-col :span="4" :xs="24">
           <div class="head-container">
             <el-input
               v-model="deptName"
@@ -14,7 +14,7 @@
               style="margin-bottom: 20px"
             />
           </div>
-          <div class="head-container"   style="overflow-x: scroll;height: 620px;">
+          <div class="head-container"   style="overflow-x: scroll">
             <el-tree
               :data="deptOptions"
               :props="defaultProps"
@@ -28,7 +28,7 @@
           </div>
         </el-col>
         <!--用户数据-->
-        <el-col style="width: calc(100% - 300px);">
+        <el-col :span="20" :xs="24">
           <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
             <el-form-item :label="$t('userName')" prop="userName">
               <el-input
@@ -208,7 +208,7 @@
     />
 
     <!-- 添加或修改用户配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="750px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
@@ -216,9 +216,9 @@
               <el-input v-model="form.nickName" :placeholder="$t('nickNamePlaceholder')" maxlength="30" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item :label="$t('deptId')" prop="deptId">
-              <treeselect class="treeselectBox" v-model="form.deptId" :options="deptOptions" :show-count="true" :placeholder="$t('deptIdPlaceholder')" />
+              <treeselect class="treeselectBox" :flat="true" :joinValues="true" :defaultExpandLevel="Infinity" :multiple="true" v-model="form.deptId" :options="deptOptions" :show-count="true" :placeholder="$t('deptIdPlaceholder')" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -237,7 +237,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item v-if="form.userId == undefined" :label="$t('userName')" prop="userName">
-              <el-input v-model="form.userName" :placeholder="$t('userNamePlaceholder')" maxlength="100" />
+              <el-input v-model="form.userName" :placeholder="$t('userNamePlaceholder')" maxlength="30" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -433,7 +433,7 @@ export default {
       rules: {
         userName: [
           { required: true, message: this.$t('userNameMessage1'), trigger: "blur" },
-          { min: 2, max: 100, message: this.$t('userNameMessage2'), trigger: 'blur' }
+          { min: 2, max: 20, message: this.$t('userNameMessage2'), trigger: 'blur' }
         ],
         nickName: [
           { required: true, message: this.$t('nickNameMessage1'), trigger: "blur" }
@@ -611,6 +611,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function() {
+      console.log('this.form', this.form)
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.userId != undefined) {
@@ -647,7 +648,7 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = this.$t('userImport');
+      this.upload.title = "用户导入";
       this.upload.open = true;
     },
     /** 下载模板操作 */
@@ -675,12 +676,12 @@ export default {
 };
 </script>
 <style>
-  .head-container .el-tree{
-    width: max-content;
-  }
-  .treeselectBox.vue-treeselect .vue-treeselect__menu-container div{
-    max-width: max-content;
-    min-width: 100%;
-    width: max-content;
-  }
+  /*.head-container .el-tree{*/
+  /*  width: max-content;*/
+  /*}*/
+  /*.treeselectBox.vue-treeselect .vue-treeselect__menu-container div{*/
+  /*  max-width: max-content;*/
+  /*  min-width: 100%;*/
+  /*  width: max-content;*/
+  /*}*/
 </style>

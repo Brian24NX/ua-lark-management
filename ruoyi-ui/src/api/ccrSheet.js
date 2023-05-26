@@ -1,4 +1,4 @@
-import request from '@/utils/hvacRequest'
+import request from '@/utils/request'
 
 // 问题一级分类接口
 export function ccrproblemCategoryListApi(query) {

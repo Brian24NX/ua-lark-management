@@ -212,42 +212,6 @@ aside {
   min-height: calc(100vh - 170px);
 }
 
-.status-color{
-  position: relative;
+.el-form-item__label{
+  font-weight: normal;
 }
-
-.status-color::after{
-  content: "";
-  border-radius: 100%;
-  width: 5px;
-  height: 5px;
-  position: absolute;
-  left: -12px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.status-color-wait {
-  color: #E6A23C;
-}
-.status-color-wait::after{  background: #E6A23C;}
-
-.status-color-pass {
-  color: #67C23A;
-}
-.status-color-pass::after{  background: #67C23A;}
-
-.status-color-Failed {
-  color: #F56C6C;
-}
-.status-color-Failed::after{  background: #F56C6C;}
-
-
-.status-color-Not {color: #000;}
-.status-color-Not::after{  background: #000;}
-
-.status-color-In {color: #67c23a;}
-.status-color-In::after{  background: #67c23a;}
-
-.status-color-Over {color: #b6b6b6;}
-.status-color-Over::after{  background: #b6b6b6;}

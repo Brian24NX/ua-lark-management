@@ -137,17 +137,37 @@
       }
     },
     created() {
-      console.log('process.env.VUE_APP_BASE_API', process.env.VUE_APP_BASE_API)
+      console.log('process.env.VUE_APP_BASE_API', process.env.VUE_APP_APPID)
       // this.getCode()
       this.getCookie()
     },
     mounted() {
-      new WwLogin({
-        id: 'login__qrcode-container',
-        appid: process.env.VUE_APP_APPID,
-        agentid: process.env.VUE_APP_AGENRID,
-        redirect_uri: encodeURIComponent(process.env.VUE_APP_ROOT_HOST + process.env.VUE_APP_ROOT_PATH + '/#/login')
-      })
+      let appid = 'cli_a4fa3fa3cf7b100c' || process.env.VUE_APP_APPID
+      let redirect_uri = 'http://localhost:82/'
+      let goto = "https://passport.feishu.cn/suite/passport/oauth/authorize?client_id="+ appid +"&redirect_uri="+ redirect_uri +"&response_type=code&state=STATE"
+      var QRLoginObj = QRLogin({
+        id:"login__qrcode-container",
+        goto: goto,
+        width: "280",
+        height: "280",
+        style: "width:280px;height:280px;border: 0;"//可选的，二维码html标签的style属性
+      });
+      var handleMessage = function (event) {
+        var origin = event.origin;
+        // 使用 matchOrigin 方法来判断 message 来自页面的url是否合法
+        if( QRLoginObj.matchOrigin(origin) ) {
+          var loginTmpCode = event.data;
+          // 在授权页面地址上拼接上参数 tmp_code，并跳转
+          window.location.href = `${goto}&tmp_code=${loginTmpCode}`;
+        }
+      };
+
+      if (typeof window.addEventListener != 'undefined') {
+        window.addEventListener('message', handleMessage, false);}
+      else if (typeof window.attachEvent != 'undefined') {
+        window.attachEvent('onmessage', handleMessage);
+      }
+
     },
     methods: {
       getStaffInfo(code) {

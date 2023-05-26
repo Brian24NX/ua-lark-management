@@ -76,6 +76,7 @@ import Search from '@/components/HeaderSearch'
 import RuoYiGit from '@/components/RuoYi/Git'
 import RuoYiDoc from '@/components/RuoYi/Doc'
 import Cookies from 'js-cookie'
+import i18n from "../../lang";
 
 export default {
   data() {
@@ -89,10 +90,6 @@ export default {
           value: 'zh',
           label: '简体中文'
         },
-        // {
-        //   value: 'ko',
-        //   label: '한국어'
-        // }
       ],
       selectLang: '',
       token: this.$store.state.user.token,
@@ -147,7 +144,7 @@ export default {
       const language = (
         navigator.language || navigator.browserLanguage
       ).toLowerCase()
-      const locales = ['en', 'zh', 'ko']
+      const locales = this.options.map((ee)=> ee.value)
       for (const locale of locales) {
         if (language.indexOf(locale) > -1) {
           return locale
@@ -160,16 +157,18 @@ export default {
       this.$store.dispatch('app/toggleSideBar')
     },
     async logout() {
-      this.$confirm('确定注销并退出系统吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('loginOutTips'), this.$t('tips'), {
+        confirmButtonText: this.$t('logoutYes'),
+        cancelButtonText: this.$t('logoutNo'),
         type: 'warning'
-      }).then(() => {
-        this.$store.dispatch('LogOut').then(() => {
-          // location.href = '/index';
-          location.href = process.env.VUE_APP_ROOT_PATH + "/#/login"
+      })
+        .then(() => {
+          this.$store.dispatch('LogOut').then(() => {
+            location.href = process.env.VUE_APP_ROOT_PATH
+          })
         })
-      }).catch(() => {});
+        .catch(() => {
+        })
     }
   }
 }

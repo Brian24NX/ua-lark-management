@@ -19,7 +19,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item :label="$t('status')" prop="status">
         <el-select v-model="queryParams.status" placeholder="数据状态" clearable>
           <el-option
             v-for="dict in dict.type.sys_normal_disable"
@@ -30,8 +30,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -44,7 +44,7 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:dict:add']"
-        >新增</el-button>
+        >{{$t('add')}}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -55,7 +55,7 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:dict:edit']"
-        >修改</el-button>
+        >{{$t('elEdit')}}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -66,7 +66,7 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:dict:remove']"
-        >删除</el-button>
+        >{{$t('delete')}}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -76,7 +76,7 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:dict:export']"
-        >导出</el-button>
+        >{{$t('export')}}</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -90,7 +90,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
+    <el-table stripe v-loading="loading" :data="dataList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编码" align="center" prop="dictCode" />
       <el-table-column label="字典标签" align="center" prop="dictLabel">
@@ -101,18 +101,18 @@
       </el-table-column>
       <el-table-column label="字典键值" align="center" prop="dictValue" />
       <el-table-column label="字典排序" align="center" prop="dictSort" />
-      <el-table-column label="状态" align="center" prop="status">
+      <el-table-column :label="$t('status')" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column :label="$t('remarks')" align="center" prop="remark" :show-overflow-tooltip="true" />
+      <el-table-column :label="$t('creatTime')" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('tableHead.operation')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -120,14 +120,14 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:dict:edit']"
-          >修改</el-button>
+          >{{$t('elEdit')}}</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:dict:remove']"
-          >删除</el-button>
+          >{{$t('delete')}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -155,7 +155,7 @@
         <el-form-item label="样式属性" prop="cssClass">
           <el-input v-model="form.cssClass" placeholder="请输入样式属性" />
         </el-form-item>
-        <el-form-item label="显示排序" prop="dictSort">
+        <el-form-item :label="$t('orderNum')" prop="dictSort">
           <el-input-number v-model="form.dictSort" controls-position="right" :min="0" />
         </el-form-item>
         <el-form-item label="回显样式" prop="listClass">
@@ -168,7 +168,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
+        <el-form-item :label="$t('status')" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in dict.type.sys_normal_disable"
@@ -177,8 +177,8 @@
             >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"></el-input>
+        <el-form-item :label="$t('remarks')" prop="remark">
+          <el-input v-model="form.remark" type="textarea" :placeholder="$t('remarksPlaceholders')"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -365,14 +365,14 @@ export default {
           if (this.form.dictCode != undefined) {
             updateData(this.form).then(response => {
               this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
-              this.$modal.msgSuccess("修改成功");
+              this.$modal.msgSuccess(this.$t('modificationSucceeded'));
               this.open = false;
               this.getList();
             });
           } else {
             addData(this.form).then(response => {
               this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
-              this.$modal.msgSuccess("新增成功");
+              this.$modal.msgSuccess(this.$t('successfullyAdded'));
               this.open = false;
               this.getList();
             });
@@ -383,11 +383,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const dictCodes = row.dictCode || this.ids;
-      this.$modal.confirm('是否确认删除字典编码为"' + dictCodes + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除字典编码为"' + dictCodes + this.$t('tips12') + '"？').then(function() {
         return delData(dictCodes);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功");
+        this.$modal.msgSuccess(this.$t('deletionSucceeded'));
         this.$store.dispatch('dict/removeDict', this.queryParams.dictType);
       }).catch(() => {});
     },
