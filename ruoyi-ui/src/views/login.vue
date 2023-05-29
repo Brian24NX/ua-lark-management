@@ -91,6 +91,7 @@
   import { getCodeImg, wecomLogout } from '@/api/login'
   import Cookies from 'js-cookie'
   import { encrypt, decrypt } from '@/utils/jsencrypt'
+  import { getQueryObject, queryURLParams } from '@/utils'
   import router from '../router'
   import { setToken } from '@/utils/auth'
 
@@ -127,10 +128,12 @@
     watch: {
       $route: {
         handler: function(route) {
-          this.redirect = route.query && route.query.redirect
-          console.log('route', route)
-          if (route.query.code) {
-            this.getStaffInfo(route.query.code)
+          let _href = window.location.href
+          this.redirect = getQueryObject(_href) && getQueryObject(_href).redirect || ''
+          console.log('code', queryURLParams(_href))
+          console.log('redirect', this.redirect)
+          if (queryURLParams(_href) && queryURLParams(_href).code) {
+            this.getStaffInfo(queryURLParams(_href).code)
           }
         },
         immediate: true
@@ -143,8 +146,8 @@
     },
     mounted() {
       let appid = 'cli_a4fa3fa3cf7b100c' || process.env.VUE_APP_APPID
-      let redirect_uri = 'http://localhost:82/'
-      let goto = "https://passport.feishu.cn/suite/passport/oauth/authorize?client_id="+ appid +"&redirect_uri="+ redirect_uri +"&response_type=code&state=STATE"
+      let redirect_uri = 'http://localhost'
+      let goto = "https://passport.feishu.cn/suite/passport/oauth/authorize?client_id="+ appid +"&redirect_uri="+ redirect_uri +"&response_type=code"
       var QRLoginObj = QRLogin({
         id:"login__qrcode-container",
         goto: goto,
@@ -152,6 +155,7 @@
         height: "280",
         style: "width:280px;height:280px;border: 0;"//可选的，二维码html标签的style属性
       });
+      console.log('goto', goto)
       var handleMessage = function (event) {
         var origin = event.origin;
         // 使用 matchOrigin 方法来判断 message 来自页面的url是否合法
@@ -239,12 +243,12 @@
               'permission.addRoutes',
               this.$store.state.permission.addRoutes
             )
-
             try {
               let pathArr = this.$store.state.permission.addRoutes
               let path = this.redirect || pathArr[0].path + '/' + pathArr[0].children[0].path
-              console.log('123', path)
-              this.$router.push(path)
+              console.log('123', path, window.location.origin + window.location.pathname + '#' + path)
+            //  this.$router.push(path)
+              window.location.href = window.location.origin + window.location.pathname + '#' + path
             } catch (e) {
               this.$router.push(this.redirect || '/')
             }
