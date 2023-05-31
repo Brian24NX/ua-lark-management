@@ -82,7 +82,7 @@ spring:
 
 carrier:
   openapi:
-    hvacHost: https://hvac-wecom.carrier.cn/carrier-hvac-admin
+    hvacHost: https://xxx
     hvacSecret: YzA5YWI5ZjBlIiwiY2xpZW50X2lkQBZ95WFfcGVybWF
 
 #企业微信配置

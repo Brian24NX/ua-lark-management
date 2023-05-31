@@ -31,7 +31,7 @@ public class ActivityController {
 
     private static final Long DEPT_ID = 108L;
 
-    @PostMapping("/activity/page")
+//    @PostMapping("/activity/page")
     public Object get(@RequestBody PageQuery<Activity> pageQuery) {
         Long userId = SecurityUtils.getUserId();
         String content = JSON.toJSONString(pageQuery);
@@ -52,7 +52,7 @@ public class ActivityController {
         }
     }
 
-    @PostMapping("/activity/page-json")
+//    @PostMapping("/activity/page-json")
     public AjaxResult getJson(@RequestBody PageQuery<Activity> pageQuery) {
         Long userId = SecurityUtils.getUserId();
         String content = JSON.toJSONString(pageQuery);
