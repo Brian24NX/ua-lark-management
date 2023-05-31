@@ -6,7 +6,7 @@ import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from "@/utils/ruoyi";
 import cache from '@/plugins/cache'
 import { saveAs } from 'file-saver'
-import md5 from "js-md5";
+import SHA256 from '@/utils/sha265'
 import i18n from '@/lang/index'
 import Cookies from "js-cookie";
 
@@ -33,16 +33,14 @@ service.interceptors.request.use(config => {
     config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
 
-  let ou = Math.floor(Math.random()*100000)
-  let timesTamp = new Date().getTime() + ou
-  let secret = process.env.VUE_APP_BASE_SECRET
-  let appId = process.env.VUE_APP_BASE_APPID
-  config.headers['timestamp'] = timesTamp
-  config.headers['appId'] = appId
-  config.headers['sign'] = md5(timesTamp + secret + appId)
-  config.headers['Accept-Language'] = Cookies.get('localeLang') || 'en'
 
-  console.log('sign===timestamp==ou', timesTamp, ou, md5(timesTamp + secret + appId))
+  let timeStamp = new Date().getTime() + Math.floor(Math.random()*100000)
+  let appId = process.env.VUE_APP_BASE_APPID
+  let secretKey = process.env.VUE_APP_BASE_SECRET
+  config.headers['timestamp'] = timeStamp
+  config.headers['appId'] = appId
+  config.headers['sign'] = SHA256(`${timeStamp}${secretKey}${appId}`)
+  config.headers['Accept-Language'] = Cookies.get('localeLang') || 'en'
 
   // get请求映射params参数
   if (config.method === 'get' && config.params) {
