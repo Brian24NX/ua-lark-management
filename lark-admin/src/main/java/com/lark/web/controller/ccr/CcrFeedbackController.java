@@ -19,14 +19,14 @@ import java.util.List;
  */
 @RestController
 @Slf4j
-@Api("ccr")
+//@Api("ccr")
 public class CcrFeedbackController {
 
     @Autowired
     private ISysUserService userService;
 
-    @ApiOperation("获取用户列表")
-    @GetMapping("/ccr/searchUserList/{roleId}")
+//    @ApiOperation("获取用户列表")
+//    @GetMapping("/ccr/searchUserList/{roleId}")
     public R<List<UserBaseInfo>> getUserListByDeptId(@PathVariable Long roleId) {
         return R.ok(userService.searchUserListByRoleId(roleId));
     }

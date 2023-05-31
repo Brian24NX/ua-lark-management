@@ -107,3 +107,8 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+sign:
+  map:
+    #ios
+    "8599081689": "MzG3h0J3M039zF7x215Uwx7X"

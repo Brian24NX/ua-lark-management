@@ -84,7 +84,7 @@ spring:
 
 carrier:
     openapi:
-        hvacHost: https://uat-hvac-wecom.carrier.cn/carrier-hvac-admin
+        hvacHost: https://xxx
         hvacSecret: OiJIUzI1NiIsInR5cCI6IkpQBZ95.eyJ1c2VyX25hbW
 
 #UA-LARK企业微信配置
