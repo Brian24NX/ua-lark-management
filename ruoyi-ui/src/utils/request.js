@@ -1,18 +1,18 @@
 import axios from 'axios'
-import { Notification, MessageBox, Message, Loading } from 'element-ui'
+import {Notification, MessageBox, Message, Loading} from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import {getToken} from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
-import { tansParams, blobValidate } from "@/utils/ruoyi";
+import {tansParams, blobValidate} from "@/utils/ruoyi";
 import cache from '@/plugins/cache'
-import { saveAs } from 'file-saver'
+import {saveAs} from 'file-saver'
 import SHA256 from '@/utils/sha265'
 import i18n from '@/lang/index'
 import Cookies from "js-cookie";
 
 let downloadLoadingInstance;
 // 是否显示重新登录
-export let isRelogin = { show: false };
+export let isRelogin = {show: false};
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 
@@ -33,8 +33,7 @@ service.interceptors.request.use(config => {
     config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
 
-
-  let timeStamp = new Date().getTime() + Math.floor(Math.random()*100000)
+  let timeStamp = new Date().getTime() + Math.floor(Math.random() * 100000)
   let appId = process.env.VUE_APP_BASE_APPID
   let secretKey = process.env.VUE_APP_BASE_SECRET
   config.headers['timestamp'] = timeStamp
@@ -74,8 +73,8 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-    console.log(error)
-    Promise.reject(error)
+  console.log(error)
+  Promise.reject(error)
 })
 
 // 响应拦截器
@@ -124,7 +123,7 @@ service.interceptors.response.use(res => {
   },
   error => {
     console.log('err' + error)
-    let { message } = error
+    let {message} = error
     if (message == 'Network Error') {
       message = i18n.t('networkError')
     } else if (message.includes('timeout')) {
@@ -140,6 +139,7 @@ service.interceptors.response.use(res => {
     return Promise.reject(error)
   }
 )
+
 // 通用下载方法
 export function download(url, params, filename, config) {
   downloadLoadingInstance = Loading.service({
@@ -151,10 +151,10 @@ export function download(url, params, filename, config) {
     transformRequest: [(params) => {
       return tansParams(params)
     }],
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
     responseType: 'blob',
     ...config
-  }).then(async(data) => {
+  }).then(async (data) => {
     const isLogin = await blobValidate(data)
     if (isLogin) {
       const blob = new Blob([data])

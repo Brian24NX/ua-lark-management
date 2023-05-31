@@ -145,7 +145,7 @@
       this.getCookie()
     },
     mounted() {
-      let appid = 'cli_a4fa3fa3cf7b100c' || process.env.VUE_APP_APPID
+      let appid =  process.env.VUE_APP_APPID
       let redirect_uri = 'http://localhost'
       let goto = "https://passport.feishu.cn/suite/passport/oauth/authorize?client_id="+ appid +"&redirect_uri="+ redirect_uri +"&response_type=code"
       var QRLoginObj = QRLogin({
