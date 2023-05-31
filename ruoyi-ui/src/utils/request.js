@@ -8,6 +8,7 @@ import cache from '@/plugins/cache'
 import { saveAs } from 'file-saver'
 import md5 from "js-md5";
 import i18n from '@/lang/index'
+import Cookies from "js-cookie";
 
 let downloadLoadingInstance;
 // 是否显示重新登录
@@ -39,6 +40,7 @@ service.interceptors.request.use(config => {
   config.headers['timestamp'] = timesTamp
   config.headers['appId'] = appId
   config.headers['sign'] = md5(timesTamp + secret + appId)
+  config.headers['Accept-Language'] = Cookies.get('localeLang') || 'en'
 
   console.log('sign===timestamp==ou', timesTamp, ou, md5(timesTamp + secret + appId))
 

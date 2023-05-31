@@ -388,7 +388,7 @@ export default {
   menuButton: 'Button',
   menuIcon: 'Icon',
   iconSelect: 'Select Icon',
-  menuCnName: 'CN Name',
+  menuCnName: 'Menu Name',
   menuEnName: 'EN Name',
   orderNum: 'Order',
   isExtralinks: 'If External',

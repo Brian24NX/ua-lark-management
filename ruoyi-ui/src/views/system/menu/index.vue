@@ -58,8 +58,8 @@
       :default-expand-all="isExpandAll"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column :prop="localeLangTab == 'zh' ? 'menuName' : 'menuEnName'" :label="$t('menuName')" :show-overflow-tooltip="true"
-                       width="160"></el-table-column>
+<!--      <el-table-column :prop="localeLangTab == 'zh' ? 'menuName' : 'menuEnName'" :label="$t('menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>-->
+      <el-table-column prop="menuName" :label="$t('menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>
       <el-table-column prop="icon" :label="$t('icon')" align="center" width="100">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon"/>
@@ -110,7 +110,7 @@
 
     <!-- 添加或修改菜单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="750px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="130px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="150px">
         <el-row>
           <el-col :span="24">
             <el-form-item :label="$t('parentMenu')" prop="parentId">
@@ -159,11 +159,11 @@
               <el-input v-model="form.menuName" :placeholder="$t('pleaseEnter') + $t('menuCnName')"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item :label="$t('menuEnName')" prop="menuEnName">
-              <el-input v-model="form.menuEnName" :placeholder="$t('pleaseEnter') + $t('menuCnName')"/>
-            </el-form-item>
-          </el-col>
+<!--          <el-col :span="12">-->
+<!--            <el-form-item :label="$t('menuEnName')" prop="menuEnName">-->
+<!--              <el-input v-model="form.menuEnName" :placeholder="$t('pleaseEnter') + $t('menuCnName')"/>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
           <el-col :span="12">
             <el-form-item :label="$t('orderNum')" prop="orderNum">
               <el-input-number v-model="form.orderNum" controls-position="right" :min="0"/>
@@ -472,3 +472,8 @@
     }
   }
 </script>
+<style scoped>
+  .el-col-12{
+    min-height: 51px;
+  }
+</style>

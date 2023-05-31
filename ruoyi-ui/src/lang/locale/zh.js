@@ -388,7 +388,7 @@ export default {
   menuButton: '按钮',
   menuIcon: '菜单图标',
   iconSelect: '点击选择图标',
-  menuCnName: '菜单中文名称',
+  menuCnName: '菜单名称',
   menuEnName: '菜单英文名称',
   orderNum: '显示排序',
   isExtralinks: '是否外链',

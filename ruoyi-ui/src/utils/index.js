@@ -1,4 +1,4 @@
-import { parseTime } from './ruoyi'
+import {parseTime} from './ruoyi'
 
 /**
  * 表格时间格式化
@@ -62,20 +62,38 @@ export function formatTime(time, option) {
  * @param {string} url
  * @returns {Object}
  */
-  export function getQueryObject(url) {
-    url = url == null ? window.location.href : url
-    const search = url.substring(url.lastIndexOf('?') + 1)
-    const obj = {}
-    const reg = /([^?&=]+)=([^?&=]*)/g
-    search.replace(reg, (rs, $1, $2) => {
-      const name = decodeURIComponent($1)
-      let val = decodeURIComponent($2)
-      val = String(val)
-      obj[name] = val
-      return rs
-    })
-    return obj
+export function getQueryObject(url) {
+  url = url == null ? window.location.href : url
+  const search = url.substring(url.lastIndexOf('?') + 1)
+  const obj = {}
+  const reg = /([^?&=]+)=([^?&=]*)/g
+  search.replace(reg, (rs, $1, $2) => {
+    const name = decodeURIComponent($1)
+    let val = decodeURIComponent($2)
+    val = String(val)
+    obj[name] = val
+    return rs
+  })
+  return obj
+}
+
+export function queryURLParams(url) {
+  // 1.创建a标签
+  let link = document.createElement('a');
+  link.href = url;
+  let searchUrl = link.search.substr(1); // 获取问号后面字符串
+  let hashUrl = link.hash.substr(1); // 获取#后面的值
+  let obj = {}; // 声明参数对象
+  // 2.向对象中进行存储
+  hashUrl ? obj['HASH'] = hashUrl : null; // #后面是否有值
+
+  let list = searchUrl.split("&");
+  for (let i = 0; i < list.length; i++) {
+    let arr = list[i].split("=");
+    obj[arr[0]] = arr[1];
   }
+  return obj;
+}
 
 /**
  * @param {string} input value
@@ -218,7 +236,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -235,7 +253,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
