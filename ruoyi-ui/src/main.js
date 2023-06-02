@@ -64,6 +64,8 @@ Vue.use(plugins)
 Vue.use(VueMeta)
 DictData.install()
 
+console.log('process.env.NODE_ENV', process.env)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

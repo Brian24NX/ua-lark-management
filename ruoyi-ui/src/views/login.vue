@@ -64,13 +64,14 @@
               <!--            </div>-->
             </el-form-item>
           </div>
-          <div @click="codeType = 'wecode'" class="link-type code-log"> 扫码登录>></div>
+          <div class="link-type code-log"><a :href="tohref">Lark授权登陆</a></div>
 
         </el-form>
 
         <div class="codeBox" v-show="codeType === 'wecode'">
-          <div class="login__qrcode-container" id="login__qrcode-container"></div>
-          <div @click="codeType = 'account'" class="link-type code-log"> 账号登录>></div>
+          <div class="login__qrcode-container" id="login__qrcode-container" ref="qrCodeUrl">
+          </div>
+          <div @click="codeType = 'account'" class="link-type code-log"> <a :href="tohref">Lark登陆>> </a></div>
         </div>
 
 
@@ -94,13 +95,19 @@
   import { getQueryObject, queryURLParams } from '@/utils'
   import router from '../router'
   import { setToken } from '@/utils/auth'
+  import VueQr from 'vue-qr'
 
   export default {
     name: 'Login',
+    components:{
+      VueQr,
+    },
     data() {
       return {
+        tohref: '',
+        imgUrl: '',
         codeUrl: '',
-        codeType: 'wecode', // 默认wecode，wecode 企业微信--   account--账号登录
+        codeType: 'account', // 默认wecode，wecode 企业微信--   account--账号登录
         loginForm: {
           username: 'admin',
           password: 'admin123',
@@ -141,36 +148,12 @@
     },
     created() {
       console.log('process.env.VUE_APP_BASE_API', process.env.VUE_APP_APPID)
-      // this.getCode()
+      let appid = process.env.VUE_APP_APPID
+      let redirect_uri = encodeURIComponent(process.env.VUE_APP_REDIRECT).replace(/'/g,"%27").replace(/"/g,"%22")
+      this.tohref = 'https://open.larksuite.com/open-apis/authen/v1/index?app_id=' + appid + '&redirect_uri=' + redirect_uri
       this.getCookie()
     },
     mounted() {
-      let appid =  process.env.VUE_APP_APPID
-      let redirect_uri = 'http://localhost'
-      let goto = "https://passport.feishu.cn/suite/passport/oauth/authorize?client_id="+ appid +"&redirect_uri="+ redirect_uri +"&response_type=code"
-      var QRLoginObj = QRLogin({
-        id:"login__qrcode-container",
-        goto: goto,
-        width: "280",
-        height: "280",
-        style: "width:280px;height:280px;border: 0;"//可选的，二维码html标签的style属性
-      });
-      console.log('goto', goto)
-      var handleMessage = function (event) {
-        var origin = event.origin;
-        // 使用 matchOrigin 方法来判断 message 来自页面的url是否合法
-        if( QRLoginObj.matchOrigin(origin) ) {
-          var loginTmpCode = event.data;
-          // 在授权页面地址上拼接上参数 tmp_code，并跳转
-          window.location.href = `${goto}&tmp_code=${loginTmpCode}`;
-        }
-      };
-
-      if (typeof window.addEventListener != 'undefined') {
-        window.addEventListener('message', handleMessage, false);}
-      else if (typeof window.attachEvent != 'undefined') {
-        window.attachEvent('onmessage', handleMessage);
-      }
 
     },
     methods: {

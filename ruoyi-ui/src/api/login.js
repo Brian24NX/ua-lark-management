@@ -58,7 +58,7 @@ export function getCodeImg() {
   })
 }
 
-// code 获取登陆的信息  POST https://uat-wecom.carrier.cn/carrier-admin-api/wecom/login
+// code 获取登陆的信息
 export function wecomLogout(data) {
   return request({
     url: '/wecom/login',

@@ -6,8 +6,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build:prod": "vue-cli-service build",
-    "build:stage": "vue-cli-service build --mode staging",
+    "build:uat": "vue-cli-service build",
+    "build:prod": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
     "lint": "eslint --ext .js,.vue src"
   },
@@ -55,9 +55,10 @@
     "sortablejs": "1.10.2",
     "vue": "2.6.12",
     "vue-count-to": "1.0.13",
-    "vue-i18n": "^8.15.1",
     "vue-cropper": "0.5.5",
+    "vue-i18n": "^8.15.1",
     "vue-meta": "2.4.0",
+    "vue-qr": "^4.0.9",
     "vue-router": "3.4.9",
     "vuedraggable": "2.24.3",
     "vuex": "3.6.0"
