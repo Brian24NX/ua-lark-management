@@ -4,158 +4,11 @@
              :close-on-click-modal="false" :showClose="false">
     <el-button class="closeBtn" type="text" icon="el-icon-close" @click="close('rest')"></el-button>
 
-    <el-form v-loading="loading" label-position="top" :model="form" :rules="rules" ref="form" label-width="120px"
-             :disabled="pageType === 'detail'"
-             class="demo-form">
-      <el-row>
-        <el-col :span="16">
-
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="活动名称" prop="activityName">
-                <el-input clearable v-model="form.activityName" maxlength="25" show-word-limit/>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="11">
-              <el-form-item label="活动时间" prop="activityTime">
-                <el-date-picker
-                  style="width: 100%;"
-                  v-model="form.activityTime"
-                  :default-time="['00:00:00', '23:59:59']"
-                  @change="activityTimeChange"
-                  type="datetimerange"
-                  range-separator="至"
-                  :picker-options="pickerOptionsStart"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="11" :offset="2">
-              <el-form-item label="报名时间" prop="registrationTime">
-                <el-date-picker
-                  style="width: 100%;"
-                  :default-time="['00:00:00', '23:59:59']"
-                  v-model="form.registrationTime"
-                  type="datetimerange"
-                  :picker-options="pickerOptionsEnd"
-                  range-separator="至"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期">
-                </el-date-picker>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="24">
-              <el-form-item prop="provinceId" style="margin-bottom: 0;">
-                <span slot='label'>活动地点  <span class="tips-addRess"><i class="el-icon-warning"></i> 具体地址仅会通知报名审核通过的客户，不会展示给其他客户</span></span>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="5">
-              <el-form-item prop="provinceId" class="box-address">
-                <el-select clearable v-model="form.provinceId" @change="getCityList" placeholder="请选择省">
-                  <el-option v-for="(item,index) of provinceList" :key="index" :label="item.label" :value="item.value"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="5" :offset="1">
-              <el-form-item clearable prop="cityId" class="box-address">
-                <el-select clearable v-model="form.cityId" placeholder="请选择市">
-                  <el-option v-for="(item,index) of cityList" :key="index" :label="item.label" :value="item.value"/>
-                </el-select>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12" :offset="1">
-              <el-form-item prop="addr" class="box-address">
-                <el-input clearable v-model.trim="form.addr" maxlength="60" placeholder="请输入详细地址"></el-input>
-              </el-form-item>
-            </el-col>
-
-          </el-row>
-
-          <el-row>
-            <el-col :span="24">
-              <el-form-item label="活动海报" prop="pic">
-                <ImageUpload class="notification-add" :limit="1" :isShowTip="false" apiUrl="activity/upload-img"
-                             :fileSize="20" v-model="form.pic"/>
-                <div style="color: #f27d00;">建议尺寸750*530px，jpg，png格式，图片小于20M</div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-        </el-col>
-        <el-col :span="8">
-          <previewMobile :previewData="previewData" @previewFn="previewFn"/>
-        </el-col>
-        <el-col :span="24">
-          <el-row>
-            <el-col :span="24">
-              <el-form-item>
-                <span slot='label'>活动详情  <span class="tips-addRess"><i class="el-icon-warning"></i> 图片尺寸不得小于690X410，字体大小不小于14PX</span></span>
-                <div v-if="editorLoading" v-loading="editorLoading" style="height: 450px;"></div>
-                <div v-else>
-                  <Tinymce ref="editor" :readonly="pageType == 'detail'" v-model="form.activityDetail" :height="450"/>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row class="nomb">
-            <el-col :span="6">
-              <el-form-item label="活动模板跳转链接">
-                <el-input clearable v-model.trim="form.activityRedirectUrl" placeholder="请输入具体的链接地址"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="10" :offset="1">
-              <el-form-item label="名单管理人" prop="listAdminId">
-                <el-col :span="16">
-                  <el-input clearable readonly v-model.trim="form.listAdminName" placeholder="请先添加名单管理人"></el-input>
-                </el-col>
-                <el-col :span="6" :offset="1">
-                  <el-button class="button-new-tag" @click="addUser">+ 添加</el-button>
-                </el-col>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-        </el-col>
-      </el-row>
-    </el-form>
-
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="close">取消</el-button>
-      <el-button v-if="pageType !== 'detail'" :loading="loadingSave" type="primary" @click="save(0)">保存</el-button>
-      <el-button v-if="pageType !== 'detail'" :loading="loadingPublish" type="primary" @click="save(1)">保存并发布
-      </el-button>
-    </div>
-
-    <deptDialog ref="deptList" @deptInit="deptInit" v-if="deptVisible"/>
 
   </el-dialog>
 </template>
 
 <script>
-  import Tinymce from '@/components/Tinymce'
-  import previewMobile from './previewMobile'
-  import deptDialog from './deptDialog'
-
-  import {
-    addAndUpdate,
-    getProvinceListServe,
-    detail
-  } from '@/api/hvacEventManagementApi'
-
   export default {
     props: {
       pageType: {
@@ -168,26 +21,8 @@
       }
     },
     components: {
-      Tinymce,
-      previewMobile,
-      deptDialog
     },
     computed: {
-      title() {
-        let title = ''
-        switch (this.pageType) {
-          case 'add':
-            title = '新增'
-            break
-          case 'edit':
-            title = '编辑'
-            break
-          case 'detail':
-            title = '详情'
-            break
-        }
-        return title
-      }
     },
     data() {
       return {
@@ -462,18 +297,7 @@
       },
 
       close(type) {
-        if (type === 'rest') {
-          this.$confirm('是否直接关闭？', '提示', {
-            confirmButtonText: '是',
-            cancelButtonText: '否',
-            type: 'warning'
-          }).then(() => {
-            this.closeFn()
-          }).catch(() => {
-          })
-        } else {
-          this.closeFn()
-        }
+        this.closeFn()
       },
       closeFn() {
         this.visible = false

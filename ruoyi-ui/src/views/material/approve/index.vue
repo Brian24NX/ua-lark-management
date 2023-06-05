@@ -3,80 +3,70 @@
 
     <div class="page-main">
       <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-        <el-form-item label="活动名称" prop="activityName">
-          <el-input
-            v-model="queryParams.activityName"
-            placeholder="请输入活动名称"
-            clearable
-          />
+        <el-form-item label="Material/Code" prop="code">
+          <el-input v-model="queryParams.code" placeholder="Material/Code" clearable/>
         </el-form-item>
+
+        <el-form-item label="Category">
+          <el-select @change="getList('rest')" clearable v-model="queryParams.category">
+            <el-option v-for="(dict, index) in categorySelect" :key="index" :label="dict.label" :value="dict.value"/>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="Supplier">
+          <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">
+            <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>
+          </el-select>
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
           <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
 
+
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5">
-          <el-button
-            type="primary"
-            plain
-            icon="el-icon-plus"
-            @click="handleAdd('add')"
-          >新增
-          </el-button>
+          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Add Material</el-button>
+          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Import</el-button>
+          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Export</el-button>
         </el-col>
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
       </el-row>
 
       <div class="content">
-        <el-table stripe ref="table" v-loading="loading" :data="list">
-          <el-table-column label="活动名称" align="center" prop="activityName" min-width="220">
+        <el-table stripe ref="table" v-loading="loading" :data="list" @selection-change="handleSelectionChange">
+          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column label="Image" align="center" prop="Image" min-width="120">
             <template slot-scope="scope">
-              <el-button type="text" @click="handleInfo('detail' ,scope.row)">
-                <span style="border-bottom: 1px solid #84868a;">{{scope.row.activityName}}</span>
-              </el-button>
+              <img src="">
             </template>
           </el-table-column>
-          <el-table-column label="活动时间" align="center" min-width="220">
+          <el-table-column label="Material" align="center" prop="Material" min-width="220">
             <template slot-scope="scope">
-              <span>{{scope.row.activityStartTime}}</span> <span>~</span><br/>
-              <span>{{scope.row.activityEndTime}}</span>
+              Material
             </template>
           </el-table-column>
-          <el-table-column label="报名状态" align="center" prop="registrationStatus" min-width="120">
+          <el-table-column label="Code" align="center" prop="Code" min-width="120" />
+          <el-table-column label="Category" align="center" prop="Category" min-width="120" />
+          <el-table-column label="Specifications" align="center" prop="Specifications" min-width="120">
             <template slot-scope="scope">
-              <span class="status-color status-color-Not" v-if="scope.row.enrollmentStatus == 1">报名未开始</span>
-              <span class="status-color status-color-In" v-if="scope.row.enrollmentStatus == 2">报名进行中</span>
-              <span class="status-color status-color-Over" v-if="scope.row.enrollmentStatus == 3">报名已结束</span>
+              <span>{{scope.row.published || '-'}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="活动状态" align="center" prop="activityStatus" min-width="120">
+          <el-table-column label="Unit" align="center" prop="Unit" min-width="120"/>
+          <el-table-column label="Retail Price" align="center" prop="Retail" min-width="120"/>
+          <el-table-column label="Cost Price" align="center" prop="Cost" min-width="120"/>
+          <el-table-column label="Material Status" align="center" prop="Status" min-width="120"/>
+          <el-table-column label="Update Time" align="center" prop="UpdateTime" min-width="120"/>
+          <el-table-column label="Supplier" align="center" prop="Supplier" min-width="120"/>
+
+          <el-table-column label="Action" align="center" width="240" fixed="right">
             <template slot-scope="scope">
-              <span class="status-color status-color-Not" v-if="scope.row.activityStatus == 1">活动未开始</span>
-              <span class="status-color status-color-In" v-if="scope.row.activityStatus == 2">活动进行中</span>
-              <span class="status-color status-color-Over" v-if="scope.row.activityStatus == 3">活动已结束</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="发布状态" align="center" prop="published" min-width="120">
-            <template slot-scope="scope">
-              <span class="status-color status-color-Not" v-if="scope.row.published == 0">未发布</span>
-              <span class="status-color status-color-In" v-if="scope.row.published == 1">已发布</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="已报名人数" align="center" prop="numberOfApplicants" min-width="120"/>
-          <el-table-column label="操作" align="center" width="240" fixed="right">
-            <template slot-scope="scope">
-              <!--   1）发布状态为【已发布】时  展示 【取消发布】、【编辑】、【名单管理】   -->
-              <!--   2）发布状态为【未发布】时 展示  【发布】、【编辑】、【名单管理】、【删除】    -->
-              <el-button v-if="scope.row.published == 1" type="text" @click="handleInfo('Unpublish' ,scope.row)">取消发布
-              </el-button>
-              <el-button v-if="scope.row.published == 0" type="text" @click="handleInfo('publish' ,scope.row)">发布
-              </el-button>
-              <el-button v-if="scope.row.published == 0" type="text" @click="handleInfo('edit' ,scope.row)">编辑</el-button>
-              <el-button type="text" @click="handleInfo('managementList' ,scope.row.id)">名单管理</el-button>
-              <el-button v-if="scope.row.published == 0" type="text" @click="handleInfo('del' ,scope.row.id)">删除
-              </el-button>
+              <el-button  type="text" @click="handleInfo('Off' ,scope.row)"> Off-sale </el-button>
+              <el-button  type="text" @click="handleInfo('On' ,scope.row)">On-sale</el-button>
+              <el-button  type="text" @click="handleInfo('Modify' ,scope.row)">Modify</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -86,19 +76,19 @@
     <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
                 @pagination="getList"/>
 
-    <add v-if="visibleHandle" ref="eventListAdd" :pageType="pageType" :detailData="detailData" @emitInit="getList"/>
+    <div v-if="handleSelection.length">
+      Total：{{handleSelection.length}} materials
+    </div>
 
   </div>
 </template>
 
 <script>
-  import add from './add'
   import { page, del, publish } from '@/api/hvacEventManagementApi'
 
   export default {
-    name: 'hvacServiceSenterServiceList',
+    name: 'materialApprove',
     components: {
-      add
     },
     data() {
       return {
@@ -108,15 +98,21 @@
         queryParams: {
           pageNum: 1,
           pageSize: 10,
-          activityName: ''
+          code: '',
+          category: '',
+          supplier: '',
+          status: '',
         },
+        categorySelect: [],
+        supplierSelect: [],
+        statusSelect: [],
         // 遮罩层
         loading: true,
         // 总条数
         total: 0,
         // 表格数据
         list: [],
-
+        handleSelection: [],
         pageType: '',
         visibleHandle: false,
         detailData: {}
@@ -128,6 +124,11 @@
     mounted() {
     },
     methods: {
+      // 多选框选中数据
+      handleSelectionChange(selection) {
+        this.handleSelection = selection.map(item => item.roleId)
+        console.log("this.handleSelection", this.handleSelection)
+      },
       /** 搜索按钮操作 */
       handleQuery() {
         this.getList()
@@ -147,7 +148,15 @@
         }
 
         console.log(this.queryParams)
-        this.loading = true
+        this.loading = false
+
+        for (var i = 0; i < 12; i++){
+          this.list.push({
+            roleId: i,
+            Code: i++
+          })
+        }
+        return
         page({
           pageNum: this.queryParams.pageNum,
           pageSize: this.queryParams.pageSize,

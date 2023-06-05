@@ -90,6 +90,10 @@ export default {
           value: 'zh',
           label: '简体中文'
         },
+        {
+          value: 'ko',
+          label: '한국어'
+        },
       ],
       selectLang: '',
       token: this.$store.state.user.token,

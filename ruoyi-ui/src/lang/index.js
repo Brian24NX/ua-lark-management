@@ -8,24 +8,24 @@ import elementZhLocale from 'element-ui/lib/locale/lang/zh-CN'// element-ui 的�
 import elementKoLocale from 'element-ui/lib/locale/lang/ko'// element-ui 的语言包，没用到的可以不引入
 import enLocale from './locale/en' // 项目中的语言包 英文
 import zhLocale from './locale/zh' // 项目中的语言包 中文
-// import koLocale from './locale/ko' // 项目中的语言包 韩文
+import koLocale from './locale/ko' // 项目中的语言包 韩文
 
 
 Vue.use(VueI18n)
 
 const messages = {
   en: {
+    ...elementEnLocale,
     ...enLocale,
-    ...elementEnLocale
   },
   zh: {
+    ...elementZhLocale,
     ...zhLocale,
-    ...elementZhLocale
   },
-  // ko:{
-  //   ...koLocale,
-  //   ...elementKoLocale
-  // }
+  ko:{
+    ...elementKoLocale,
+    ...koLocale,
+  }
 }
 // 获取当前语言环境：考虑到刷新操作，将语言类型存入缓存
 export function getLanguage() {
