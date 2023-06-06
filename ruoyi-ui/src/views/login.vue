@@ -95,12 +95,10 @@
   import { getQueryObject, queryURLParams } from '@/utils'
   import router from '../router'
   import { setToken } from '@/utils/auth'
-  import VueQr from 'vue-qr'
 
   export default {
     name: 'Login',
     components:{
-      VueQr,
     },
     data() {
       return {

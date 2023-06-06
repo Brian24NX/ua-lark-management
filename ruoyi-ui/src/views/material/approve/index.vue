@@ -1,84 +1,84 @@
 <template>
   <div class="app-container">
 
-    <div class="page-main">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-        <el-form-item label="Material/Code" prop="code">
-          <el-input v-model="queryParams.code" placeholder="Material/Code" clearable/>
-        </el-form-item>
+<!--    <div class="page-main">-->
+<!--      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">-->
+<!--        <el-form-item label="Material/Code" prop="code">-->
+<!--          <el-input v-model="queryParams.code" placeholder="Material/Code" clearable/>-->
+<!--        </el-form-item>-->
 
-        <el-form-item label="Category">
-          <el-select @change="getList('rest')" clearable v-model="queryParams.category">
-            <el-option v-for="(dict, index) in categorySelect" :key="index" :label="dict.label" :value="dict.value"/>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="Category">-->
+<!--          <el-select @change="getList('rest')" clearable v-model="queryParams.category">-->
+<!--            <el-option v-for="(dict, index) in categorySelect" :key="index" :label="dict.label" :value="dict.value"/>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 
-        <el-form-item label="Supplier">
-          <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">
-            <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>
-          </el-select>
-        </el-form-item>
+<!--        <el-form-item label="Supplier">-->
+<!--          <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">-->
+<!--            <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>-->
+<!--          </el-select>-->
+<!--        </el-form-item>-->
 
-        <el-form-item>
-          <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
-          <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
+<!--        <el-form-item>-->
+<!--          <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>-->
+<!--          <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>-->
+<!--        </el-form-item>-->
+<!--      </el-form>-->
 
 
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Add Material</el-button>
-          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Import</el-button>
-          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Export</el-button>
-        </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-      </el-row>
+<!--      <el-row :gutter="10" class="mb8">-->
+<!--        <el-col :span="1.5">-->
+<!--          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Add Material</el-button>-->
+<!--          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Import</el-button>-->
+<!--          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Export</el-button>-->
+<!--        </el-col>-->
+<!--        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>-->
+<!--      </el-row>-->
 
-      <div class="content">
-        <el-table stripe ref="table" v-loading="loading" :data="list" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center" />
-          <el-table-column label="Image" align="center" prop="Image" min-width="120">
-            <template slot-scope="scope">
-              <img src="">
-            </template>
-          </el-table-column>
-          <el-table-column label="Material" align="center" prop="Material" min-width="220">
-            <template slot-scope="scope">
-              Material
-            </template>
-          </el-table-column>
-          <el-table-column label="Code" align="center" prop="Code" min-width="120" />
-          <el-table-column label="Category" align="center" prop="Category" min-width="120" />
-          <el-table-column label="Specifications" align="center" prop="Specifications" min-width="120">
-            <template slot-scope="scope">
-              <span>{{scope.row.published || '-'}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="Unit" align="center" prop="Unit" min-width="120"/>
-          <el-table-column label="Retail Price" align="center" prop="Retail" min-width="120"/>
-          <el-table-column label="Cost Price" align="center" prop="Cost" min-width="120"/>
-          <el-table-column label="Material Status" align="center" prop="Status" min-width="120"/>
-          <el-table-column label="Update Time" align="center" prop="UpdateTime" min-width="120"/>
-          <el-table-column label="Supplier" align="center" prop="Supplier" min-width="120"/>
+<!--      <div class="content">-->
+<!--        <el-table stripe ref="table" v-loading="loading" :data="list" @selection-change="handleSelectionChange">-->
+<!--          <el-table-column type="selection" width="55" align="center" />-->
+<!--          <el-table-column label="Image" align="center" prop="Image" min-width="120">-->
+<!--            <template slot-scope="scope">-->
+<!--              <img src="">-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--          <el-table-column label="Material" align="center" prop="Material" min-width="220">-->
+<!--            <template slot-scope="scope">-->
+<!--              Material-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--          <el-table-column label="Code" align="center" prop="Code" min-width="120" />-->
+<!--          <el-table-column label="Category" align="center" prop="Category" min-width="120" />-->
+<!--          <el-table-column label="Specifications" align="center" prop="Specifications" min-width="120">-->
+<!--            <template slot-scope="scope">-->
+<!--              <span>{{scope.row.published || '-'}}</span>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--          <el-table-column label="Unit" align="center" prop="Unit" min-width="120"/>-->
+<!--          <el-table-column label="Retail Price" align="center" prop="Retail" min-width="120"/>-->
+<!--          <el-table-column label="Cost Price" align="center" prop="Cost" min-width="120"/>-->
+<!--          <el-table-column label="Material Status" align="center" prop="Status" min-width="120"/>-->
+<!--          <el-table-column label="Update Time" align="center" prop="UpdateTime" min-width="120"/>-->
+<!--          <el-table-column label="Supplier" align="center" prop="Supplier" min-width="120"/>-->
 
-          <el-table-column label="Action" align="center" width="240" fixed="right">
-            <template slot-scope="scope">
-              <el-button  type="text" @click="handleInfo('Off' ,scope.row)"> Off-sale </el-button>
-              <el-button  type="text" @click="handleInfo('On' ,scope.row)">On-sale</el-button>
-              <el-button  type="text" @click="handleInfo('Modify' ,scope.row)">Modify</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </div>
+<!--          <el-table-column label="Action" align="center" width="240" fixed="right">-->
+<!--            <template slot-scope="scope">-->
+<!--              <el-button  type="text" @click="handleInfo('Off' ,scope.row)"> Off-sale </el-button>-->
+<!--              <el-button  type="text" @click="handleInfo('On' ,scope.row)">On-sale</el-button>-->
+<!--              <el-button  type="text" @click="handleInfo('Modify' ,scope.row)">Modify</el-button>-->
+<!--            </template>-->
+<!--          </el-table-column>-->
+<!--        </el-table>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-                @pagination="getList"/>
+<!--    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"-->
+<!--                @pagination="getList"/>-->
 
-    <div v-if="handleSelection.length">
-      Total：{{handleSelection.length}} materials
-    </div>
+<!--    <div v-if="handleSelection.length">-->
+<!--      Total：{{handleSelection.length}} materials-->
+<!--    </div>-->
 
   </div>
 </template>

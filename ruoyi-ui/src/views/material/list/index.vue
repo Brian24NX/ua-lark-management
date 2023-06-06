@@ -33,12 +33,20 @@
 
 
       <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
-          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Add Material</el-button>
-          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Import</el-button>
-          <el-button type="primary" plain icon="el-icon-plus" @click="handleAdd('add')">Export</el-button>
-        </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+
+        <el-row type="flex" class="row-bg" justify="space-between">
+          <div>
+            <el-button type="primary" :disabled="!handleSelection.length > 0 " @click="sale('all')">On Sale</el-button>
+            <el-button type="primary" :disabled="!handleSelection.length > 0 "  @click="sale('all')">Off Sale</el-button>
+          </div>
+          <div>
+            <el-button icon="el-icon-plus" @click="handleInfo('add')">Add Material</el-button>
+            <el-button icon="el-icon-upload2" @click="openVisible = true">{{$t('import')}}</el-button>
+            <el-button icon="el-icon-download" @click="download">{{$t('export')}}</el-button>
+          </div>
+        </el-row>
+
+
       </el-row>
 
       <div class="content">
@@ -70,8 +78,8 @@
 
           <el-table-column label="Action" align="center" width="240" fixed="right">
             <template slot-scope="scope">
-              <el-button  type="text" @click="handleInfo('Off' ,scope.row)"> Off-sale </el-button>
-              <el-button  type="text" @click="handleInfo('On' ,scope.row)">On-sale</el-button>
+              <el-button  type="text" @click="sale('off', scope.row)"> Off-sale </el-button>
+              <el-button  type="text" @click="sale('on', scope.row)">On-sale</el-button>
               <el-button  type="text" @click="handleInfo('Modify' ,scope.row)">Modify</el-button>
             </template>
           </el-table-column>
@@ -88,20 +96,29 @@
 
     <add v-if="visibleHandle" ref="eventListAdd" :pageType="pageType" :detailData="detailData" @emitInit="getList"/>
 
+<!--  导入   -->
+    <import-upload @openInt="openInt" :apiUrl="'/school/importStudentAccountData/'" :openVisible="openVisible"></import-upload>
+
+
+
   </div>
 </template>
 
 <script>
+  import ImportUpload from '@/components/ImportUpload'
+
   import add from './add'
   import { page, del, publish } from '@/api/hvacEventManagementApi'
 
   export default {
     name: 'materialList',
     components: {
-      add
+      add,
+      ImportUpload
     },
     data() {
       return {
+        openVisible: false,
         // 显示搜索条件
         showSearch: true,
         // 查询参数
@@ -134,9 +151,52 @@
     mounted() {
     },
     methods: {
+      openInt(type){
+        this.openVisible = false
+        if (type === 'getList'){
+          this.getList()
+        }
+      },
+
+      download() {
+        downStudentAccount(this.queryParams).then(result => {
+          function change(t) {
+            if (t < 10) {
+              return '0' + t
+            } else {
+              return t
+            }
+          }
+
+          let d = new Date()
+          let year = d.getFullYear()
+          let month = change(d.getMonth() + 1)
+          let day = change(d.getDate())
+          let filename = 'Account Information ' + sessionStorage.getItem('academicSystemName') + year + month + day
+          let blob = new Blob([result], {type: 'application/vnd.ms-excel'})
+          let url = window.URL.createObjectURL(blob)
+          if (window.navigator.msSaveBlob) {  //IE
+            try {
+              window.navigator.msSaveBlob(blob, filename)
+            } catch (e) {
+              console.log(e)
+            }
+          } else {  //非IE
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.setAttribute('download', filename)
+            document.body.appendChild(link)
+            link.click()
+          }
+          URL.revokeObjectURL(url) // 释放内存
+        })
+      },
+
+
       // 多选框选中数据
       handleSelectionChange(selection) {
-        this.handleSelection = selection.map(item => item.roleId)
+        this.handleSelection = selection.map(item => item.id)
         console.log("this.handleSelection", this.handleSelection)
       },
       /** 搜索按钮操作 */
@@ -162,10 +222,11 @@
 
         for (var i = 0; i < 12; i++){
           this.list.push({
-            roleId: i,
+            id: i,
             Code: i++
           })
         }
+        this.total = this.list.length
         return
         page({
           pageNum: this.queryParams.pageNum,
@@ -186,18 +247,32 @@
       /** 操作按钮集合 */
       handleInfo(type, scope) {
         console.log('typescope', type, scope)
-        if (type == 'edit' || type == 'detail') {
+
+        if (type == 'edit') {
           this.detailData = scope
-          this.handleAdd(type)
         }
-        if (type == 'managementList') {
-          this.$router.push({ path: '/hvacEventManagement/nameList', query: { id: scope } })
+
+        this.handleAdd(type)
+      },
+
+      sale(type, scope) {
+        console.log('sale', type, scope)
+        let ids = []
+        if (type == 'all') {
+          ids = this.handleSelection
+        } else {
+          ids = [scope.id]
         }
-        if (type == 'publish' || type == 'Unpublish') {
+
+
+        this.$confirm('请确认是否该操作？', '提示', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(() => {
           this.loading = true
-          publish({
-            id: scope.id,
-            published: type == 'publish' ? 1 : 0
+          del({
+            id: ids
           }).then(res => {
             if (res.code == 200) {
               this.getList()
@@ -205,27 +280,8 @@
           }).finally(() => {
             this.loading = false
           })
-        }
-        if (type == 'del') {
-          this.$confirm('请确认是否删除', '提示', {
-            confirmButtonText: '是',
-            cancelButtonText: '否',
-            type: 'warning'
-          }).then(() => {
-            this.loading = true
-            del({
-              id: scope
-            }).then(res => {
-              if (res.code == 200) {
-                this.getList()
-              }
-            }).finally(() => {
-              this.loading = false
-            })
-          }).catch(() => {
-          })
-        }
-
+        }).catch(() => {
+        })
       },
 
       /** 新增按钮操作 */
