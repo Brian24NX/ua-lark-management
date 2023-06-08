@@ -75,8 +75,8 @@
               ></el-date-picker>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
+              <el-button type="primary" icon="el-icon-search"  @click="handleQuery">{{$t('search')}}</el-button>
+              <el-button icon="el-icon-refresh"  @click="resetQuery">{{$t('elRefresh')}}</el-button>
             </el-form-item>
           </el-form>
 
@@ -86,7 +86,7 @@
                 type="primary"
                 plain
                 icon="el-icon-plus"
-                size="mini"
+
                 @click="handleAdd"
                 v-hasPermi="['system:user:add']"
               >{{$t('add')}}</el-button>
@@ -96,7 +96,7 @@
                 type="success"
                 plain
                 icon="el-icon-edit"
-                size="mini"
+
                 :disabled="single"
                 @click="handleUpdate"
                 v-hasPermi="['system:user:edit']"
@@ -107,7 +107,7 @@
                 type="danger"
                 plain
                 icon="el-icon-delete"
-                size="mini"
+
                 :disabled="multiple"
                 @click="handleDelete"
                 v-hasPermi="['system:user:remove']"
@@ -119,7 +119,7 @@
                 type="info"
                 plain
                 icon="el-icon-upload2"
-                size="mini"
+
                 @click="handleImport"
                 v-hasPermi="['system:user:import']"
               >{{$t('import')}}</el-button>
@@ -129,7 +129,7 @@
                 type="warning"
                 plain
                 icon="el-icon-download"
-                size="mini"
+
                 @click="handleExport"
                 v-hasPermi="['system:user:export']"
               >{{$t('export')}}</el-button>
@@ -168,20 +168,20 @@
             >
               <template slot-scope="scope" v-if="scope.row.userId !== 1">
                 <el-button
-                  size="mini"
+
                   type="text"
                   icon="el-icon-edit"
                   @click="handleUpdate(scope.row)"
                   v-hasPermi="['system:user:edit']"
                 >{{$t('elEdit')}}</el-button>
                 <el-button
-                  size="mini"
+
                   type="text"
                   icon="el-icon-delete"
                   @click="handleDelete(scope.row)"
                   v-hasPermi="['system:user:remove']"
                 >{{$t('delete')}}</el-button>
-                <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
+                <el-dropdown  @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
                 <span class="el-dropdown-link">
                   <i class="el-icon-d-arrow-right el-icon--right"></i> {{$t('more')}}
                 </span>

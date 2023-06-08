@@ -1,112 +1,121 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-      <el-form-item :label="$t('menuName')" prop="menuName">
-        <el-input
-          v-model="queryParams.menuName"
-          :placeholder="$t('pleaseEnter') + $t('menuName')"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('status')" prop="status">
-        <el-select v-model="queryParams.status" :placeholder="$t('menuStatus')" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_normal_disable"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
-      </el-form-item>
-    </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:menu:add']"
-        >{{$t('add')}}
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          plain
-          icon="el-icon-sort"
-          size="mini"
-          @click="toggleExpandAll"
-        >{{$t('expand')}}/{{$t('collapse')}}
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+    <div class="search backBg">
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+        <el-row type="flex" justify="space-between" align="bottom">
+          <el-col :xs="24" :span="20">
+            <el-form-item :label="$t('menuName')" prop="menuName">
+              <el-input
+                v-model="queryParams.menuName"
+                :placeholder="$t('pleaseEnter') + $t('menuName')"
+                clearable
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item :label="$t('status')" prop="status">
+              <el-select v-model="queryParams.status" :placeholder="$t('menuStatus')" clearable>
+                <el-option
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-form-item :xs="24" class="findBtn">
+            <div slot="label" class="labelNull"></div>
+            <el-button type="primary" icon="el-icon-search"  @click="handleQuery">{{$t('search')}}</el-button>
+            <el-button icon="el-icon-refresh"  @click="resetQuery">{{$t('elRefresh')}}</el-button>
+          </el-form-item>
+        </el-row>
+      </el-form>
+    </div>
 
-    <el-table
-      v-if="refreshTable"
-      v-loading="loading"
-      :data="menuList"
-      row-key="menuId"
-      :default-expand-all="isExpandAll"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-    >
-<!--      <el-table-column :prop="localeLangTab == 'zh' ? 'menuName' : 'menuEnName'" :label="$t('menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>-->
-      <el-table-column prop="menuName" :label="$t('menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>
-      <el-table-column prop="icon" :label="$t('icon')" align="center" width="100">
-        <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon"/>
-        </template>
-      </el-table-column>
-      <el-table-column prop="orderNum" :label="$t('sort')" width="60"></el-table-column>
-      <el-table-column prop="perms" :label="$t('perms')" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="component" :label="$t('component')" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" :label="$t('status')" width="80">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('creatTime')" align="center" prop="createTime">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('tableHead.operation')" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+    <div class="tableMain backBg">
+      <el-row class="mb10" type="flex" justify="space-between">
+        <div>
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:menu:edit']"
-          >{{$t('elEdit')}}
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
+            type="primary"
+            plain
             icon="el-icon-plus"
-            @click="handleAdd(scope.row)"
+            @click="handleAdd"
             v-hasPermi="['system:menu:add']"
           >{{$t('add')}}
           </el-button>
+
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:menu:remove']"
-          >{{$t('delete')}}
+            type="info"
+            plain
+            icon="el-icon-sort"
+            @click="toggleExpandAll"
+          >{{$t('expand')}}/{{$t('collapse')}}
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </div>
+        <div>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        </div>
+      </el-row>
+
+      <el-table
+        v-if="refreshTable"
+        v-loading="loading"
+        :data="menuList"
+        row-key="menuId"
+        :default-expand-all="isExpandAll"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      >
+        <!--      <el-table-column :prop="localeLangTab == 'zh' ? 'menuName' : 'menuEnName'" :label="$t('menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>-->
+        <el-table-column prop="menuName" :label="$t('menuName')" :show-overflow-tooltip="true" width="160"></el-table-column>
+        <el-table-column prop="icon" :label="$t('icon')" align="center" width="100">
+          <template slot-scope="scope">
+            <svg-icon :icon-class="scope.row.icon"/>
+          </template>
+        </el-table-column>
+        <el-table-column prop="orderNum" :label="$t('sort')" width="60"></el-table-column>
+        <el-table-column prop="perms" :label="$t('perms')" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="component" :label="$t('component')" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="status" :label="$t('status')" width="80">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('creatTime')" align="center" prop="createTime">
+          <template slot-scope="scope">
+            <span>{{ parseTime(scope.row.createTime) }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('tableHead.operation')" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['system:menu:edit']"
+            >{{$t('elEdit')}}
+            </el-button>
+            <el-button
+
+              type="text"
+              icon="el-icon-plus"
+              @click="handleAdd(scope.row)"
+              v-hasPermi="['system:menu:add']"
+            >{{$t('add')}}
+            </el-button>
+            <el-button
+
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['system:menu:remove']"
+            >{{$t('delete')}}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
 
     <!-- 添加或修改菜单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="750px" append-to-body>

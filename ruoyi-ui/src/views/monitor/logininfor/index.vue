@@ -46,8 +46,8 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="el-icon-search"  @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh"  @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -57,7 +57,7 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['monitor:logininfor:remove']"
@@ -68,7 +68,7 @@
           type="danger"
           plain
           icon="el-icon-delete"
-          size="mini"
+
           @click="handleClean"
           v-hasPermi="['monitor:logininfor:remove']"
         >清空</el-button>
@@ -78,7 +78,7 @@
           type="primary"
           plain
           icon="el-icon-unlock"
-          size="mini"
+
           :disabled="single"
           @click="handleUnlock"
           v-hasPermi="['monitor:logininfor:unlock']"
@@ -89,7 +89,7 @@
           type="warning"
           plain
           icon="el-icon-download"
-          size="mini"
+
           @click="handleExport"
           v-hasPermi="['monitor:logininfor:export']"
         >导出</el-button>

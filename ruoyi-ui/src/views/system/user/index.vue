@@ -3,7 +3,7 @@
     <div class="pageCont">
       <el-row :gutter="20">
         <!--部门数据-->
-        <el-col style="width: 280px;">
+        <el-col class="treeBox">
           <div class="head-container">
             <el-input
               v-model="deptName"
@@ -14,7 +14,7 @@
               style="margin-bottom: 20px"
             />
           </div>
-          <div class="head-container"   style="overflow-x: scroll;height: 620px;">
+          <div class="head-container head-list">
             <el-tree
               :data="deptOptions"
               :props="defaultProps"
@@ -28,184 +28,199 @@
           </div>
         </el-col>
         <!--用户数据-->
-        <el-col style="width: calc(100% - 300px);">
-          <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
-            <el-form-item :label="$t('userName')" prop="userName">
-              <el-input
-                v-model="queryParams.userName"
-                :placeholder="$t('userNamePlaceholder')"
-                clearable
-                style="width: 240px"
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item :label="$t('phonenumbers')" prop="phonenumber">
-              <el-input
-                v-model="queryParams.phonenumber"
-                :placeholder="$t('phonenumbersPlaceholder')"
-                clearable
-                style="width: 240px"
-                @keyup.enter.native="handleQuery"
-              />
-            </el-form-item>
-            <el-form-item :label="$t('status')" prop="status">
-              <el-select
-                v-model="queryParams.status"
-                :placeholder="$t('placeholderPlaceholder')"
-                clearable
-                style="width: 240px"
-              >
-                <el-option
-                  v-for="dict in dict.type.sys_normal_disable"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('creatTime')">
-              <el-date-picker
-                v-model="dateRange"
-                style="width: 240px"
-                value-format="yyyy-MM-dd"
-                type="daterange"
-                range-separator="-"
-                :start-placeholder="$t('startPlaceholder')"
-                :end-placeholder="$t('endPlaceholder')"
-              ></el-date-picker>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
-            </el-form-item>
-          </el-form>
+        <el-col class="user-page-box">
 
-          <el-row :gutter="10" class="mb8">
-            <el-col :span="1.5">
-              <el-button
-                type="primary"
-                plain
-                icon="el-icon-plus"
-                size="mini"
-                @click="handleAdd"
-                v-hasPermi="['system:user:add']"
-              >{{$t('add')}}</el-button>
-            </el-col>
-            <el-col :span="1.5">
-              <el-button
-                type="success"
-                plain
-                icon="el-icon-edit"
-                size="mini"
-                :disabled="single"
-                @click="handleUpdate"
-                v-hasPermi="['system:user:edit']"
-              >{{$t('elEdit')}}</el-button>
-            </el-col>
-            <el-col :span="1.5">
-              <el-button
-                type="danger"
-                plain
-                icon="el-icon-delete"
-                size="mini"
-                :disabled="multiple"
-                @click="handleDelete"
-                v-hasPermi="['system:user:remove']"
-              >{{$t('delete')}}</el-button>
-            </el-col>
+            <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
 
-            <el-col :span="1.5">
-              <el-button
-                type="info"
-                plain
-                icon="el-icon-upload2"
-                size="mini"
-                @click="handleImport"
-                v-hasPermi="['system:user:import']"
-              >{{$t('import')}}</el-button>
-            </el-col>
-            <el-col :span="1.5">
-              <el-button
-                type="warning"
-                plain
-                icon="el-icon-download"
-                size="mini"
-                @click="handleExport"
-                v-hasPermi="['system:user:export']"
-              >{{$t('export')}}</el-button>
-            </el-col>
+              <div class="search backBg">
+                <el-row type="flex" justify="space-between" align="bottom">
+                  <el-col :xs="24" :span="20">
+                    <el-form-item :label="$t('userName')" prop="userName">
+                      <el-input
+                        v-model="queryParams.userName"
+                        :placeholder="$t('userNamePlaceholder')"
+                        clearable
+                        style="width: 240px"
+                        @keyup.enter.native="handleQuery"
+                      />
+                    </el-form-item>
+                    <el-form-item :label="$t('phonenumbers')" prop="phonenumber">
+                      <el-input
+                        v-model="queryParams.phonenumber"
+                        :placeholder="$t('phonenumbersPlaceholder')"
+                        clearable
+                        style="width: 240px"
+                        @keyup.enter.native="handleQuery"
+                      />
+                    </el-form-item>
+                    <el-form-item :label="$t('status')" prop="status">
+                      <el-select
+                        v-model="queryParams.status"
+                        :placeholder="$t('placeholderPlaceholder')"
+                        clearable
+                        style="width: 240px"
+                      >
+                        <el-option
+                          v-for="dict in dict.type.sys_normal_disable"
+                          :key="dict.value"
+                          :label="dict.label"
+                          :value="dict.value"
+                        />
+                      </el-select>
+                    </el-form-item>
+                    <el-form-item :label="$t('creatTime')">
+                      <el-date-picker
+                        v-model="dateRange"
+                        style="width: 240px"
+                        value-format="yyyy-MM-dd"
+                        type="daterange"
+                        range-separator="-"
+                        :start-placeholder="$t('startPlaceholder')"
+                        :end-placeholder="$t('endPlaceholder')"
+                      ></el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-form-item :xs="24" class="findBtn">
+                    <div slot="label" class="labelNull"></div>
+                    <el-button type="primary" icon="el-icon-search"  @click="handleQuery">{{$t('search')}}</el-button>
+                    <el-button icon="el-icon-refresh"  @click="resetQuery">{{$t('elRefresh')}}</el-button>
+                  </el-form-item>
+                </el-row>
+              </div>
+            </el-form>
 
-            <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
-          </el-row>
 
-          <el-table stripe v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="50" align="center" />
-            <el-table-column :label="$t('userId')" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
-            <el-table-column :label="$t('userName')"  align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
-            <el-table-column :label="$t('nickName')"  align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-            <el-table-column :label="$t('deptName')"  align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
-            <el-table-column :label="$t('phonenumber')"  align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
-            <el-table-column :label="$t('status')"  align="center" key="status" v-if="columns[5].visible">
-              <template slot-scope="scope">
-                <el-switch
-                  v-model="scope.row.status"
-                  active-value="0"
-                  inactive-value="1"
-                  @change="handleStatusChange(scope.row)"
-                ></el-switch>
-              </template>
-            </el-table-column>
-            <el-table-column :label="$t('creatTime')" align="center" prop="createTime" v-if="columns[6].visible" width="160">
-              <template slot-scope="scope">
-                <span>{{ parseTime(scope.row.createTime) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              :label="$t('tableHead.operation')"
-              align="center"
-              width="160"
-              class-name="small-padding fixed-width"
-            >
-              <template slot-scope="scope" v-if="scope.row.userId !== 1">
+          <div class="tableMain backBg">
+            <el-row :gutter="10" class="mb8">
+              <el-col :span="1.5">
                 <el-button
-                  size="mini"
-                  type="text"
+                  type="primary"
+                  plain
+                  icon="el-icon-plus"
+
+                  @click="handleAdd"
+                  v-hasPermi="['system:user:add']"
+                >{{$t('add')}}</el-button>
+              </el-col>
+              <el-col :span="1.5">
+                <el-button
+                  type="success"
+                  plain
                   icon="el-icon-edit"
-                  @click="handleUpdate(scope.row)"
+
+                  :disabled="single"
+                  @click="handleUpdate"
                   v-hasPermi="['system:user:edit']"
                 >{{$t('elEdit')}}</el-button>
+              </el-col>
+              <el-col :span="1.5">
                 <el-button
-                  size="mini"
-                  type="text"
+                  type="danger"
+                  plain
                   icon="el-icon-delete"
-                  @click="handleDelete(scope.row)"
+
+                  :disabled="multiple"
+                  @click="handleDelete"
                   v-hasPermi="['system:user:remove']"
                 >{{$t('delete')}}</el-button>
-                <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
+              </el-col>
+
+              <el-col :span="1.5">
+                <el-button
+                  type="info"
+                  plain
+                  icon="el-icon-upload2"
+
+                  @click="handleImport"
+                  v-hasPermi="['system:user:import']"
+                >{{$t('import')}}</el-button>
+              </el-col>
+              <el-col :span="1.5">
+                <el-button
+                  type="warning"
+                  plain
+                  icon="el-icon-download"
+
+                  @click="handleExport"
+                  v-hasPermi="['system:user:export']"
+                >{{$t('export')}}</el-button>
+              </el-col>
+
+              <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
+            </el-row>
+
+            <el-table stripe v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
+              <el-table-column type="selection" width="50" align="center" />
+              <el-table-column :label="$t('userId')" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
+              <el-table-column :label="$t('userName')"  align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
+              <el-table-column :label="$t('nickName')"  align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
+              <el-table-column :label="$t('deptName')"  align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
+              <el-table-column :label="$t('phonenumber')"  align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
+              <el-table-column :label="$t('status')"  align="center" key="status" v-if="columns[5].visible">
+                <template slot-scope="scope">
+                  <el-switch
+                    v-model="scope.row.status"
+                    active-value="0"
+                    inactive-value="1"
+                    @change="handleStatusChange(scope.row)"
+                  ></el-switch>
+                </template>
+              </el-table-column>
+              <el-table-column :label="$t('creatTime')" align="center" prop="createTime" v-if="columns[6].visible" width="160">
+                <template slot-scope="scope">
+                  <span>{{ parseTime(scope.row.createTime) }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                :label="$t('tableHead.operation')"
+                align="center"
+                width="160"
+                class-name="small-padding fixed-width"
+              >
+                <template slot-scope="scope" v-if="scope.row.userId !== 1">
+                  <el-button
+
+                    type="text"
+                    icon="el-icon-edit"
+                    @click="handleUpdate(scope.row)"
+                    v-hasPermi="['system:user:edit']"
+                  >{{$t('elEdit')}}</el-button>
+                  <el-button
+
+                    type="text"
+                    icon="el-icon-delete"
+                    @click="handleDelete(scope.row)"
+                    v-hasPermi="['system:user:remove']"
+                  >{{$t('delete')}}</el-button>
+                  <el-dropdown  @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:user:resetPwd', 'system:user:edit']">
                 <span class="el-dropdown-link">
                   <i class="el-icon-d-arrow-right el-icon--right"></i> {{$t('more')}}
                 </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
-                                      v-hasPermi="['system:user:resetPwd']">{{$t('resetPassword')}}</el-dropdown-item>
-                    <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
-                                      v-hasPermi="['system:user:edit']">{{$t('assignRoles')}}</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </template>
-            </el-table-column>
-          </el-table>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
+                                        v-hasPermi="['system:user:resetPwd']">{{$t('resetPassword')}}</el-dropdown-item>
+                      <el-dropdown-item command="handleAuthRole" icon="el-icon-circle-check"
+                                        v-hasPermi="['system:user:edit']">{{$t('assignRoles')}}</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                </template>
+              </el-table-column>
+            </el-table>
+
+            <pagination
+              v-show="total>0"
+              :total="total"
+              :page.sync="queryParams.pageNum"
+              :limit.sync="queryParams.pageSize"
+              @pagination="getList"
+            />
+          </div>
+
         </el-col>
       </el-row>
     </div>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+
 
     <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
@@ -674,9 +689,56 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.treeBox{
+  width: 220px;
+  margin: 0 10px;
+  padding: 10px;
+  background: #fff;
+  height: calc(100vh - 80px);
+  .head-list{
+    height: calc(100% - 80px);
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #666;
+      border-radius: 10px;
+    }
+  }
+}
+
+.user-page-box{
+  width: calc(100% - 240px);
+  height: calc(100vh - 65px);
+  padding-right: 0!important;
+  padding-left: 5px!important;
+  position: relative;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 10px;
+  }
+}
+</style>
+
 <style>
   .head-container .el-tree{
     width: max-content;
+    min-width: 100%;
   }
   .treeselectBox.vue-treeselect .vue-treeselect__menu-container div{
     max-width: max-content;

@@ -48,8 +48,8 @@
                     ></el-date-picker>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
-                    <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
+                    <el-button type="primary" icon="el-icon-search"  @click="handleQuery">{{$t('search')}}</el-button>
+                    <el-button icon="el-icon-refresh"  @click="resetQuery">{{$t('elRefresh')}}</el-button>
                 </el-form-item>
             </el-form>
 
@@ -59,7 +59,7 @@
                             type="primary"
                             plain
                             icon="el-icon-plus"
-                            size="mini"
+
                             @click="handleAdd"
                             v-hasPermi="['system:dict:add']"
                     >{{$t('add')}}
@@ -70,7 +70,7 @@
                             type="success"
                             plain
                             icon="el-icon-edit"
-                            size="mini"
+
                             :disabled="single"
                             @click="handleUpdate"
                             v-hasPermi="['system:dict:edit']"
@@ -82,7 +82,7 @@
                             type="danger"
                             plain
                             icon="el-icon-delete"
-                            size="mini"
+
                             :disabled="multiple"
                             @click="handleDelete"
                             v-hasPermi="['system:dict:remove']"
@@ -94,7 +94,7 @@
                             type="warning"
                             plain
                             icon="el-icon-download"
-                            size="mini"
+
                             @click="handleExport"
                             v-hasPermi="['system:dict:export']"
                     >{{$t('export')}}
@@ -105,7 +105,7 @@
                             type="danger"
                             plain
                             icon="el-icon-refresh"
-                            size="mini"
+
                             @click="handleRefreshCache"
                             v-hasPermi="['system:dict:remove']"
                     >刷新缓存
@@ -139,7 +139,7 @@
                 <el-table-column :label="$t('tableHead.operation')" align="center" class-name="small-padding fixed-width">
                     <template slot-scope="scope">
                         <el-button
-                                size="mini"
+
                                 type="text"
                                 icon="el-icon-edit"
                                 @click="handleUpdate(scope.row)"
@@ -147,7 +147,7 @@
                         >{{$t('elEdit')}}
                         </el-button>
                         <el-button
-                                size="mini"
+
                                 type="text"
                                 icon="el-icon-delete"
                                 @click="handleDelete(scope.row)"

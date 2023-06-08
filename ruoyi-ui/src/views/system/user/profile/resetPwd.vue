@@ -10,8 +10,8 @@
       <el-input v-model="user.confirmPassword" :placeholder="$t('pleaseEnter') + $t('confirmPassword')" type="password" show-password/>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" size="mini" @click="submit">{{$t('save')}}</el-button>
-      <el-button type="danger" size="mini" @click="close">{{$t('closes')}}</el-button>
+      <el-button type="primary"  @click="submit">{{$t('save')}}</el-button>
+      <el-button type="danger"  @click="close">{{$t('closes')}}</el-button>
     </el-form-item>
   </el-form>
 </template>

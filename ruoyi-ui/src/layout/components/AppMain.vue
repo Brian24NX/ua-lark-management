@@ -29,9 +29,8 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   /* 50= navbar  50  */
-  min-height: calc(100vh - 30px);
   width: 100%;
-  padding: 15px;
+  padding: 15px 15px 0 15px;
   position: relative;
   overflow: hidden;
 }
@@ -42,8 +41,23 @@ export default {
 
 .hasTagsView {
   .app-main {
-    /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 50px);
+    height: calc(100vh - 50px);
+    border-radius: 10px;
+    position: relative;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #666;
+      border-radius: 10px;
+    }
+
   }
 
   .fixed-header + .app-main {

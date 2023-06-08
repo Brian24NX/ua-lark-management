@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'has-logo':showLogo}" :style="{ backgroundColor:'#152C73'}">
+    <div :class="{'has-logo':showLogo}" :style="{ backgroundColor:'#111'}">
         <logo v-if="showLogo" :collapse="isCollapse" />
 
         <el-scrollbar :class="settings.sideTheme" wrap-class="scrollbar-wrapper">

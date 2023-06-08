@@ -76,7 +76,7 @@ console.log('process.env.NODE_ENV', process.env)
  */
 
 Vue.use(Element, {
-  size: Cookies.get('size') || 'small', // set element-ui default size
+  size: 'small', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value) // set element-ui il8n
 })
 

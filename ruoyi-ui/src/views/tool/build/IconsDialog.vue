@@ -12,7 +12,7 @@
         选择图标
         <el-input
           v-model="key"
-          size="mini"
+
           :style="{width: '260px'}"
           placeholder="请输入图标名称"
           prefix-icon="el-icon-search"

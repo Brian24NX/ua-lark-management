@@ -20,8 +20,8 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
+        <el-button type="primary" icon="el-icon-search"  @click="handleQuery">{{$t('search')}}</el-button>
+        <el-button icon="el-icon-refresh"  @click="resetQuery">{{$t('elRefresh')}}</el-button>
       </el-form-item>
     </el-form>
 
@@ -31,7 +31,7 @@
           type="primary"
           plain
           icon="el-icon-plus"
-          size="mini"
+
           @click="openSelectUser"
           v-hasPermi="['system:role:add']"
         >{{$t('addUser')}}</el-button>
@@ -41,7 +41,7 @@
           type="danger"
           plain
           icon="el-icon-circle-close"
-          size="mini"
+
           :disabled="multiple"
           @click="cancelAuthUserAll"
           v-hasPermi="['system:role:remove']"
@@ -52,7 +52,7 @@
           type="warning"
           plain
           icon="el-icon-close"
-          size="mini"
+
           @click="handleClose"
         >{{$t('closes')}}</el-button>
       </el-col>
@@ -78,7 +78,7 @@
       <el-table-column :label="$t('tableHead.operation')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            size="mini"
+
             type="text"
             icon="el-icon-circle-close"
             @click="cancelAuthUser(scope.row)"

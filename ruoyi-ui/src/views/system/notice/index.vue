@@ -29,8 +29,8 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
+          <el-button type="primary" icon="el-icon-search"  @click="handleQuery">{{$t('search')}}</el-button>
+          <el-button icon="el-icon-refresh"  @click="resetQuery">{{$t('elRefresh')}}</el-button>
         </el-form-item>
       </el-form>
 
@@ -40,7 +40,7 @@
             type="primary"
             plain
             icon="el-icon-plus"
-            size="mini"
+
             @click="handleAdd"
             v-hasPermi="['system:notice:add']"
           >{{$t('add')}}
@@ -51,7 +51,7 @@
             type="success"
             plain
             icon="el-icon-edit"
-            size="mini"
+
             :disabled="single"
             @click="handleUpdate"
             v-hasPermi="['system:notice:edit']"
@@ -63,7 +63,7 @@
             type="danger"
             plain
             icon="el-icon-delete"
-            size="mini"
+
             :disabled="multiple"
             @click="handleDelete"
             v-hasPermi="['system:notice:remove']"
@@ -101,7 +101,7 @@
         <el-table-column :label="$t('tableHead.operation')" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
-              size="mini"
+
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
@@ -109,7 +109,7 @@
             >{{$t('elEdit')}}
             </el-button>
             <el-button
-              size="mini"
+
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"

@@ -1,101 +1,101 @@
 <template>
   <div class="app-container">
-    <div class="pageCont">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-        <el-form-item :label="$t('roleName')" prop="roleName">
-          <el-input
-            v-model="queryParams.roleName"
-            :placeholder="$t('pleaseEnter') + $t('roleName')"
-            clearable
-            style="width: 240px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item :label="$t('roleKey')" prop="roleKey">
-          <el-input
-            v-model="queryParams.roleKey"
-            :placeholder="$t('pleaseEnter') + $t('roleKey')"
-            clearable
-            style="width: 240px"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
-        <el-form-item :label="$t('status')"  prop="status">
-          <el-select
-            v-model="queryParams.status"
-            :placeholder="$t('roleStatus')"
-            clearable
-            style="width: 240px"
-          >
-            <el-option
-              v-for="dict in dict.type.sys_normal_disable"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('creatTime')">
-          <el-date-picker
-            v-model="dateRange"
-            style="width: 240px"
-            value-format="yyyy-MM-dd"
-            type="daterange"
-            range-separator="-"
-            :start-placeholder="$t('startPlaceholder')"
-            :end-placeholder="$t('endPlaceholder')"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">{{$t('search')}}</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">{{$t('elRefresh')}}</el-button>
-        </el-form-item>
-      </el-form>
 
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="1.5">
+    <div class="search backBg">
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+        <el-row type="flex" justify="space-between" align="bottom">
+          <el-col :xs="24" :span="20">
+            <el-form-item :label="$t('roleName')" prop="roleName">
+              <el-input
+                v-model="queryParams.roleName"
+                :placeholder="$t('pleaseEnter') + $t('roleName')"
+                clearable
+                style="width: 240px"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item :label="$t('roleKey')" prop="roleKey">
+              <el-input
+                v-model="queryParams.roleKey"
+                :placeholder="$t('pleaseEnter') + $t('roleKey')"
+                clearable
+                style="width: 240px"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item :label="$t('status')"  prop="status">
+              <el-select
+                v-model="queryParams.status"
+                :placeholder="$t('roleStatus')"
+                clearable
+                style="width: 240px"
+              >
+                <el-option
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item :label="$t('creatTime')">
+              <el-date-picker
+                v-model="dateRange"
+                style="width: 240px"
+                value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
+                :start-placeholder="$t('startPlaceholder')"
+                :end-placeholder="$t('endPlaceholder')"
+              ></el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-form-item :xs="24" class="findBtn">
+            <div slot="label" class="labelNull"></div>
+            <el-button type="primary" icon="el-icon-search"  @click="handleQuery">{{$t('search')}}</el-button>
+            <el-button icon="el-icon-refresh"  @click="resetQuery">{{$t('elRefresh')}}</el-button>
+          </el-form-item>
+        </el-row>
+      </el-form>
+    </div>
+
+    <div class="tableMain backBg">
+      <el-row class="mb10" type="flex" justify="space-between">
+        <div>
           <el-button
             type="primary"
             plain
             icon="el-icon-plus"
-            size="mini"
             @click="handleAdd"
             v-hasPermi="['system:role:add']"
           >{{$t('add')}}</el-button>
-        </el-col>
-        <el-col :span="1.5">
           <el-button
             type="success"
             plain
             icon="el-icon-edit"
-            size="mini"
             :disabled="single"
             @click="handleUpdate"
             v-hasPermi="['system:role:edit']"
           >{{$t('elEdit')}}</el-button>
-        </el-col>
-        <el-col :span="1.5">
           <el-button
             type="danger"
             plain
             icon="el-icon-delete"
-            size="mini"
             :disabled="multiple"
             @click="handleDelete"
             v-hasPermi="['system:role:remove']"
           >{{$t('delete')}}</el-button>
-        </el-col>
-        <el-col :span="1.5">
           <el-button
             type="warning"
             plain
             icon="el-icon-download"
-            size="mini"
             @click="handleExport"
             v-hasPermi="['system:role:export']"
           >{{$t('export')}}</el-button>
-        </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        </div>
+        <div>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        </div>
       </el-row>
 
       <el-table stripe v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
@@ -122,14 +122,14 @@
         <el-table-column :label="$t('tableHead.operation')" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope" v-if="scope.row.roleId !== 1">
             <el-button
-              size="mini"
+
               type="text"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:role:edit']"
             >{{$t('elEdit')}}</el-button>
             <el-button
-              size="mini"
+
               type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
@@ -137,37 +137,36 @@
             >{{$t('delete')}}</el-button>
 
             <el-button
-              size="mini"
+
               type="text"
               icon="el-icon-user"
               @click="handleCommand('handleAuthUser', scope.row)"
               v-hasPermi="['system:role:edit']"
             >{{$t('assignUsers')}}</el-button>
 
-<!--            <el-dropdown size="mini" @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:role:edit']">-->
-<!--              <span class="el-dropdown-link">-->
-<!--                <i class="el-icon-d-arrow-right el-icon&#45;&#45;right"></i>{{$t('more')}}-->
-<!--              </span>-->
-<!--              <el-dropdown-menu slot="dropdown">-->
-<!--                <el-dropdown-item command="handleDataScope" icon="el-icon-circle-check"-->
-<!--                                  v-hasPermi="['system:role:edit']">{{$t('dataPermission')}}</el-dropdown-item>-->
-<!--                <el-dropdown-item command="handleAuthUser" icon="el-icon-user"-->
-<!--                                  v-hasPermi="['system:role:edit']">{{$t('assignUsers')}}</el-dropdown-item>-->
-<!--              </el-dropdown-menu>-->
-<!--            </el-dropdown>-->
+            <!--            <el-dropdown  @command="(command) => handleCommand(command, scope.row)" v-hasPermi="['system:role:edit']">-->
+            <!--              <span class="el-dropdown-link">-->
+            <!--                <i class="el-icon-d-arrow-right el-icon&#45;&#45;right"></i>{{$t('more')}}-->
+            <!--              </span>-->
+            <!--              <el-dropdown-menu slot="dropdown">-->
+            <!--                <el-dropdown-item command="handleDataScope" icon="el-icon-circle-check"-->
+            <!--                                  v-hasPermi="['system:role:edit']">{{$t('dataPermission')}}</el-dropdown-item>-->
+            <!--                <el-dropdown-item command="handleAuthUser" icon="el-icon-user"-->
+            <!--                                  v-hasPermi="['system:role:edit']">{{$t('assignUsers')}}</el-dropdown-item>-->
+            <!--              </el-dropdown-menu>-->
+            <!--            </el-dropdown>-->
           </template>
         </el-table-column>
       </el-table>
+
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
     </div>
-
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
 
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="750px" append-to-body>

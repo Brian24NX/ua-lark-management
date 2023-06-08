@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor:'#152C73'}">
+  <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor:'#111'}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img v-if="logo" :src="logo" style="width: 40px" class="sidebar-logo" />
@@ -57,7 +57,7 @@ export default {
   text-align: center;
   overflow: hidden;
   padding: 15px 0;
-  border-bottom: 1px solid #1f3989;
+  border-bottom: 1px solid #1d1d1d;
 
   & .sidebar-logo-link {
     height: 100%;

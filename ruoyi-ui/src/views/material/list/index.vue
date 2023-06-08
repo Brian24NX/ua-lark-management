@@ -1,57 +1,57 @@
 <template>
   <div class="app-container">
 
-    <div class="page-main">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-        <el-form-item label="Material/Code" prop="code">
-          <el-input v-model="queryParams.code" placeholder="Material/Code" clearable/>
-        </el-form-item>
+    <div class="search backBg">
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-position="top" v-show="showSearch">
+        <el-row type="flex" justify="space-between" align="bottom">
+          <el-col :xs="24" :span="20">
+            <el-form-item label="Material/Code" prop="code">
+              <el-input v-model="queryParams.code" placeholder="Material/Code" clearable/>
+            </el-form-item>
 
-        <el-form-item label="Category">
-          <el-select @change="getList('rest')" clearable v-model="queryParams.category">
-            <el-option v-for="(dict, index) in categorySelect" :key="index" :label="dict.label" :value="dict.value"/>
-          </el-select>
-        </el-form-item>
+<!--            <el-form-item label="Category">-->
+<!--              <el-select @change="getList('rest')" clearable v-model="queryParams.category">-->
+<!--                <el-option v-for="(dict, index) in categorySelect" :key="index" :label="dict.label" :value="dict.value"/>-->
+<!--              </el-select>-->
+<!--            </el-form-item>-->
 
-        <el-form-item label="Supplier">
-          <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">
-            <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>
-          </el-select>
-        </el-form-item>
+            <el-form-item label="Supplier">
+              <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">
+                <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>
+              </el-select>
+            </el-form-item>
 
-        <el-form-item label="Status">
-          <el-select @change="getList('rest')" clearable v-model="queryParams.status">
-            <el-option v-for="(dict, index) in statusSelect" :key="index" :label="dict.label" :value="dict.value"/>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
-          <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-
-
-      <el-row :gutter="10" class="mb8">
-
-        <el-row type="flex" class="row-bg" justify="space-between">
-          <div>
-            <el-button type="primary" :disabled="!handleSelection.length > 0 " @click="sale('all')">On Sale</el-button>
-            <el-button type="primary" :disabled="!handleSelection.length > 0 "  @click="sale('all')">Off Sale</el-button>
-          </div>
-          <div>
-            <el-button icon="el-icon-plus" @click="handleInfo('add')">Add Material</el-button>
-            <el-button icon="el-icon-upload2" @click="openVisible = true">{{$t('import')}}</el-button>
-            <el-button icon="el-icon-download" @click="download">{{$t('export')}}</el-button>
-          </div>
+            <el-form-item label="Status">
+              <el-select @change="getList('rest')" clearable v-model="queryParams.status">
+                <el-option v-for="(dict, index) in statusSelect" :key="index" :label="dict.label" :value="dict.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-form-item :xs="24" class="findBtn">
+            <div slot="label" class="labelNull"></div>
+            <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+            <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+          </el-form-item>
         </el-row>
+      </el-form>
+    </div>
 
-
+    <div class="tableMain backBg">
+      <el-row class="mb10" type="flex" justify="space-between">
+        <div>
+          <el-button type="" :disabled="!handleSelection.length > 0 " @click="sale('all')">On Sale</el-button>
+          <el-button type="" :disabled="!handleSelection.length > 0 "  @click="sale('all')">Off Sale</el-button>
+        </div>
+        <div>
+          <el-button type="primary" icon="el-icon-plus" @click="handleInfo('add')">Add Material</el-button>
+          <el-button icon="el-icon-upload2" @click="openVisible = true">{{$t('import')}}</el-button>
+          <el-button icon="el-icon-download" @click="download">{{$t('export')}}</el-button>
+        </div>
       </el-row>
 
       <div class="content">
         <el-table stripe ref="table" v-loading="loading" :data="list" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center" />
+          <el-table-column fixed="left" type="selection" width="55" align="center" />
           <el-table-column label="Image" align="center" prop="Image" min-width="120">
             <template slot-scope="scope">
               <img src="">
@@ -85,21 +85,20 @@
           </el-table-column>
         </el-table>
       </div>
-    </div>
 
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-                @pagination="getList"/>
+      <el-row class="mb10" type="flex" justify="space-between">
+        <div>
+          <span style="margin-top: 45px;display: block;" v-if="handleSelection.length">Total：{{handleSelection.length}} materials</span>
+        </div>
 
-    <div v-if="handleSelection.length">
-      Total：{{handleSelection.length}} materials
+        <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
+      </el-row>
     </div>
 
     <add v-if="visibleHandle" ref="eventListAdd" :pageType="pageType" :detailData="detailData" @emitInit="getList"/>
 
 <!--  导入   -->
     <import-upload @openInt="openInt" :apiUrl="'/school/importStudentAccountData/'" :openVisible="openVisible"></import-upload>
-
-
 
   </div>
 </template>
@@ -108,7 +107,7 @@
   import ImportUpload from '@/components/ImportUpload'
 
   import add from './add'
-  import { page, del, publish } from '@/api/hvacEventManagementApi'
+  import { page, del, categoryTree } from '@/api/material'
 
   export default {
     name: 'materialList',
@@ -147,10 +146,17 @@
     },
     created() {
       this.getList(('rest'))
+      this.getCategoryTree()
     },
     mounted() {
     },
     methods: {
+      getCategoryTree(){
+        categoryTree().then(result => {
+
+        })
+      },
+
       openInt(type){
         this.openVisible = false
         if (type === 'getList'){
