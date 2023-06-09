@@ -202,11 +202,19 @@
     }
   }
 
+  .el-menu-item{
+    background-color: #212121 !important;
+  }
+
+  .el-menu-item.is-active{
+    color: #fff!important;
+  }
+
   .nest-menu .el-submenu>.el-submenu__title,
   .el-menu-item {
     &:hover {
       // you can use $subMenuHover
-      background-color: rgba(0, 0, 0, 0.06) !important;
+      background-color: #581910 !important;
     }
   }
 

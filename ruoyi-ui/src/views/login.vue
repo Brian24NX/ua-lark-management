@@ -1,10 +1,5 @@
 <template>
   <div class="login">
-
-    <div class="login-pic">
-      <img src="@/assets/images/logo-cont.png">
-    </div>
-
     <div class="login-main">
 
       <div class="login-main-box">
@@ -80,11 +75,11 @@
     </div>
 
     <!--  底部  -->
-    <div class="el-login-footer">
-      <span><img src="http://www.beian.gov.cn/img/ghs.png" style="width:16px;height:16px;display:inline-block;margin-right:4px;">
-        <a href="https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=2023005816" target="blank" class="copy-icon" rel="nofollow">沪ICP备2023005816号-1</a>｜</span>
-      <span>UA | 版权所有</span>
-    </div>
+<!--    <div class="el-login-footer">-->
+<!--      <span><img src="http://www.beian.gov.cn/img/ghs.png" style="width:16px;height:16px;display:inline-block;margin-right:4px;">-->
+<!--        <a href="https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=2023005816" target="blank" class="copy-icon" rel="nofollow">沪ICP备2023005816号-1</a>｜</span>-->
+<!--      <span>UA | 版权所有</span>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -294,6 +289,7 @@
     font-size: 14px;
     text-align: center;
     margin: 5% 0;
+    text-decoration: underline;
   }
 
   .codeBox {

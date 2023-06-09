@@ -30,7 +30,7 @@
         <!--用户数据-->
         <el-col class="user-page-box">
 
-            <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="120px">
+            <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-position="top" v-show="showSearch" label-width="120px">
 
               <div class="search backBg">
                 <el-row type="flex" justify="space-between" align="bottom">

@@ -2,10 +2,10 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}" :style="{ backgroundColor:'#111'}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" style="width: 40px" class="sidebar-logo" />
+        <img v-if="logo" :src="logoSamll" style="width: 40px;padding: 0;margin: auto;" class="sidebar-logo" />
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" style="width: 60%" class="sidebar-logo" />
+        <img v-if="logo" :src="logo" class="sidebar-logo" />
       </router-link>
     </transition>
   </div>
@@ -13,6 +13,8 @@
 
 <script>
 import logoImg from '@/assets/images/meau-logo.png'
+import logoSamll from '@/assets/images/meau-small-logo.png'
+
 import variables from '@/assets/styles/variables.scss'
 
 export default {
@@ -34,7 +36,8 @@ export default {
   data() {
     return {
       title: 'UA-LARK管理系统',
-      logo: logoImg
+      logo: logoImg,
+      logoSamll: logoSamll,
     }
   }
 }
@@ -64,8 +67,9 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 120px;
-      vertical-align: middle;
+      width: 75%;
+      display: block;
+      padding-left: 20px;
     }
 
     & .sidebar-title {

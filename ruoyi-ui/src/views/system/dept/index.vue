@@ -2,7 +2,7 @@
   <div class="app-container">
 
     <div class="search backBg">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" size="small" label-position="top" :inline="true" v-show="showSearch">
         <el-row type="flex" justify="space-between" align="bottom">
           <el-col :xs="24" :span="20">
             <el-form-item :label="$t('deptName')" prop="deptName">

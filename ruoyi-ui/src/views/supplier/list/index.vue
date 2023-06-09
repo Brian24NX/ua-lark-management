@@ -1,27 +1,33 @@
 <template>
   <div class="app-container">
 
-    <div class="page-main">
-      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
-
-        <el-form-item label="Supplier">
-          <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">
-            <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item>
-          <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
-          <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-
-      <el-row :gutter="10" class="mb8">
-        <el-row type="flex" class="row-bg" justify="space-between">
-          <div></div>
-          <el-button type="primary" icon="el-icon-plus" @click="handleInfo('add')">Add Supplier</el-button>
+    <div class="search backBg">
+      <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-position="top" v-show="showSearch">
+        <el-row type="flex" justify="space-between" align="bottom">
+          <el-col :xs="24" :span="20">
+            <el-form-item label="Supplier">
+              <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">
+                <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-form-item :xs="24" class="findBtn">
+            <div slot="label" class="labelNull"></div>
+            <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+            <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+          </el-form-item>
         </el-row>
+      </el-form>
+    </div>
+
+    <div class="tableMain backBg">
+      <el-row class="mb10" type="flex" justify="space-between">
+        <div></div>
+        <div>
+          <el-button type="primary" icon="el-icon-plus" @click="handleInfo('add')">Add Supplier</el-button>
+        </div>
       </el-row>
+
 
       <div class="content">
         <el-table stripe ref="table" v-loading="loading" :data="list">
@@ -43,10 +49,10 @@
           </el-table-column>
         </el-table>
       </div>
-    </div>
 
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-                @pagination="getList"/>
+      <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+                  @pagination="getList"/>
+    </div>
 
     <el-dialog append-to-body :close-on-click-modal="false" :close-on-press-escape="false" width="668px"
                :title="(type=='add'?$t('add') : $t('edit')) + 'Supplier'" :visible.sync="visible" @close="cancel">

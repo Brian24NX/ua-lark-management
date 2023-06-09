@@ -82,7 +82,7 @@
   }
 
   .content {
-    min-height: 550px;
+    /*min-height: 550px;*/
   }
 
   .findBtn{

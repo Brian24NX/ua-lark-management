@@ -45,9 +45,9 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <span>{{$store.state.user.userData.nickName}}</span>
           <img :src="avatar" class="user-avatar"/>
-          <i class="el-icon-caret-bottom"/>
+          <span style="padding: 0 10px 0 5px;">{{$store.state.user.userData.nickName}} </span>
+          <i class="el-icon-arrow-down"/>
         </div>
         <el-dropdown-menu slot="dropdown">
 <!--          <router-link to="/user/profile">-->
@@ -227,7 +227,7 @@ export default {
       display: inline-block;
       padding: 0 8px;
       height: 100%;
-      font-size: 18px;
+      font-size: 14px;
       color: #5a5e66;
       vertical-align: text-bottom;
 

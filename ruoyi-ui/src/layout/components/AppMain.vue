@@ -30,7 +30,7 @@ export default {
 .app-main {
   /* 50= navbar  50  */
   width: 100%;
-  padding: 15px 15px 0 15px;
+  padding: 15px 7px 0 15px;
   position: relative;
   overflow: hidden;
 }
@@ -48,6 +48,7 @@ export default {
 
     &::-webkit-scrollbar {
       width: 6px;
+      height: 6px;
     }
 
     &::-webkit-scrollbar-track {
