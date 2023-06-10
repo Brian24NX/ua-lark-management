@@ -37,7 +37,7 @@ module.exports = {
       [process.env.VUE_APP_BASE_API]: {
        // target: 'http://localhost:8080',   http://47.101.59.251
         //  target: process.env.NODE_ENV === 'development' ? 'http://10.28.83.196:8082/ua-lark-admin-api' : 'https://incentive-uat.underarmour.cn/edu-admin',
-        target: 'https://incentive-uat.underarmour.cn/ua-lark-admin-api',
+        target: process.env.VUE_APP_HOST_API,
         logLevel: 'debug',
         changeOrigin: true,
         pathRewrite: {
