@@ -8,16 +8,19 @@
     :disabled="isUploading"
     :on-progress="handleFileUploadProgress"
     :on-success="handleFileSuccess"
-    :auto-upload="false"
     drag
   >
     <i class="el-icon-upload"></i>
     <slot name="tips"></slot>
-    <div class="el-upload__text">{{$t('tips1')}}<em>{{$t('tips2')}}</em></div>
   </el-upload>
 </template>
 <script>
-  import {getToken} from "@/utils/auth";
+  import { getToken } from "@/utils/auth";
+  import SHA256 from '@/utils/sha265'
+
+  let timeStamp = new Date().getTime() + Math.floor(Math.random() * 100000)
+  let appId = process.env.VUE_APP_BASE_APPID
+  let secretKey = process.env.VUE_APP_BASE_SECRET
 
   export default {
     props: {
@@ -41,7 +44,12 @@
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: {Authorization: "Bearer " + getToken()},
+        headers: {
+          Authorization: "Bearer " + getToken(),
+          timestamp: timeStamp,
+          appId: appId,
+          sign: SHA256(`${timeStamp}${secretKey}${appId}`),
+        },
         // 上传的地址
         url: 'https://uat.education365.net/edu-admin/file/upload'
       }
@@ -68,11 +76,6 @@
         if (response.code != 200){
           this.$alert("<div style='overflow: auto;overflow-x: hidden;max-height: 70vh;padding: 10px 20px 0;'>" + response.msg + "</div>", this.$t('importResults'), {dangerouslyUseHTMLString: true});
         }
-        this.$emit('openInt', 'getList')
-      },
-      /** 下载模板操作 */
-      importTemplate() {
-        this.download('system/user/importTemplate', {}, `user_template_${new Date().getTime()}.xlsx`)
       },
       // 提交上传文件
       submitFileForm() {

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { page, del, publish } from '@/api/hvacEventManagementApi'
+  import { page, del, publish } from '@/api/store'
 
   export default {
     name: 'hvacServiceSenterServiceList',

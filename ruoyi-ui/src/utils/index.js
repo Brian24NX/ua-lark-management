@@ -408,6 +408,7 @@ export function isNumberStr(str) {
 
 // 日期格式转换成UTC格式
 export function getUTCtime(date) {
+  console.log('date123', date)
   if (!date) return ''
   date = new Date(date)
   var UTCyear = date.getUTCFullYear();

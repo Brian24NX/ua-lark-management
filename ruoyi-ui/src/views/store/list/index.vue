@@ -1,51 +1,68 @@
 <template>
   <div class="app-container">
 
-    <div class="page-main">
+    <div class="search backBg">
       <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch">
+        <el-row type="flex" justify="space-between" align="bottom">
+          <el-col :xs="24" :span="20">
+            <el-form-item label="Store" prop="name">
+              <el-input v-model="queryParams.name" clearable/>
+            </el-form-item>
 
-        <el-form-item label="Store">
-          <el-select @change="getList('rest')" clearable v-model="queryParams.store">
-            <el-option v-for="(dict, index) in storeSelect" :key="index" :label="dict.label" :value="dict.value"/>
-          </el-select>
-        </el-form-item>
+            <el-form-item label="Phone Number" prop="mobile">
+              <el-input v-model="queryParams.mobile" clearable/>
+            </el-form-item>
 
-        <el-form-item>
-          <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
-          <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
-        </el-form-item>
-      </el-form>
-
-      <el-row :gutter="10" class="mb8">
-        <el-row type="flex" class="row-bg" justify="space-between">
-          <div></div>
-          <el-button type="primary" icon="el-icon-upload2" @click="openVisible = true">{{$t('import')}}</el-button>
+            <el-form-item label="Status" prop="status">
+              <el-select @change="getList('rest')" clearable v-model="queryParams.status">
+                <el-option v-for="(dict, index) in storeSelect" :key="index" :label="dict.label" :value="dict.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-form-item :xs="24" class="findBtn">
+            <div slot="label" class="labelNull"></div>
+            <el-button type="primary" :loading="loading" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+            <el-button :loading="loading" icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+          </el-form-item>
         </el-row>
+      </el-form>
+    </div>
+
+    <div class="tableMain backBg">
+      <el-row class="mb10" type="flex" justify="space-between">
+        <div></div>
+        <div>
+          <el-button type="primary" icon="el-icon-upload2" @click="openVisible = true">{{$t('import')}}</el-button>
+          <el-button type="primary" icon="el-icon-upload2" @click="download">{{$t('export')}}</el-button>
+        </div>
       </el-row>
+
       <div class="content">
         <el-table stripe ref="table" v-loading="loading" :data="list">
-          <el-table-column label="Store" align="center" prop="Store" min-width="120" />
-          <el-table-column label="Address" align="center" prop="Address" min-width="120" />
-          <el-table-column label="Phone Number" align="center" prop="Phone Number" min-width="120" />
-          <el-table-column label="Contact" align="center" prop="Contact" min-width="120" />
+          <el-table-column label="Store" align="center" prop="name" min-width="180"/>
+          <el-table-column label="Store Code" align="center" prop="code" min-width="180"/>
+          <el-table-column label="Address" align="center" prop="address" min-width="220"/>
+          <el-table-column label="Tele. Number" align="center" prop="teleNumber" min-width="180"/>
+          <el-table-column label="Phone Number" align="center" prop="mobile" min-width="180"/>
+          <el-table-column label="Contact" align="center" prop="Contact" min-width="180"/>
           <el-table-column label="Status" align="center" prop="Status" min-width="220">
             <template slot-scope="scope">
-              <span>Active</span>
+              <span>{{scope.row.status == 0 ? 'Inactive' : 'active'}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="Create Time" align="center" prop="CreateTime" min-width="120" />
-
-          <el-table-column label="Action" align="center" width="240" fixed="right">
+          <el-table-column label="Create Time" align="center" prop="createTime" :formatter="formatTime"
+                           min-width="220"/>
+          <el-table-column label="Action" align="center" width="120" fixed="right">
             <template slot-scope="scope">
-              <el-button  type="text" @click="handleInfo('edit' ,scope.row)">Modify</el-button>
+              <el-button type="text" @click="handleInfo('edit' ,scope.row)">Modify</el-button>
             </template>
           </el-table-column>
         </el-table>
       </div>
-    </div>
 
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
-                @pagination="getList"/>
+      <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+                  @pagination="getList"/>
+    </div>
 
     <el-dialog append-to-body :close-on-click-modal="false" :close-on-press-escape="false" width="668px"
                :title="(type=='add'?$t('add') : $t('edit'))" :visible.sync="visible" @close="cancel">
@@ -54,16 +71,24 @@
         <el-col :offset="1" :span="22">
           <el-form ref="form" :model="form" :rules="rules" label-width="120px">
 
+            <el-form-item label="Store Code" prop="code">
+              <el-input type="text" v-model="form.code"></el-input>
+            </el-form-item>
+
             <el-form-item label="Address" prop="address">
-              <el-input type="text"  v-model="form.address"></el-input>
+              <el-input type="text" v-model="form.address"></el-input>
             </el-form-item>
 
-            <el-form-item label="Contact" prop="contact">
-              <el-input type="text"  v-model="form.contact"></el-input>
+            <el-form-item label="Phone Number" prop="mobile">
+              <el-input type="text" v-model="form.mobile"></el-input>
             </el-form-item>
 
-            <el-form-item label="Phone Number" prop="phoneNumber">
-              <el-input type="text"  v-model="form.phoneNumber"></el-input>
+            <el-form-item label="Tele. Number" prop="teleNumber">
+              <el-input type="text" v-model="form.teleNumber"></el-input>
+            </el-form-item>
+
+            <el-form-item label="Contact" prop="contacts">
+              <el-input type="text" v-model="form.contacts"></el-input>
             </el-form-item>
 
           </el-form>
@@ -81,8 +106,8 @@
 </template>
 
 <script>
-
-  import { page, del } from '@/api/hvacEventManagementApi'
+  import { formatDate } from '@/utils'
+  import { page, save, downExport } from '@/api/store'
 
   export default {
     name: 'storeList',
@@ -95,9 +120,14 @@
         queryParams: {
           pageNum: 1,
           pageSize: 10,
-          Store: '',
+          name: '',
+          mobile: '',
+          status: 0
         },
-        storeSelect: [],
+        storeSelect: [
+          { label: 'Inactive ', value: 0 },
+          { label: 'active ', value: 1 }
+        ],
         // 遮罩层
         loading: true,
         // 总条数
@@ -107,15 +137,21 @@
 
         visible: false,
         loadingSave: false,
-        type:'',
-        form:{
+        type: '',
+        form: {
           id: '',
+          code: '',
           address: '',
-          contact: '',
-          phoneNumber: '',
+          mobile: '',
+          teleNumber: '',
+          contacts: ''
         },
-        rules:{
-          supplierName: [{ required: true, message: '请输入', trigger: ['blur', 'change'] }],
+        rules: {
+          code: [{ required: true, message: '请输入', trigger: ['blur', 'change'] }],
+          address: [{ required: true, message: '请输入', trigger: ['blur', 'change'] }],
+          phoneNumber: [{ required: true, message: '请输入', trigger: ['blur', 'change'] }],
+          teleNumber: [{ required: true, message: '请输入', trigger: ['blur', 'change'] }],
+          contacts: [{ required: true, message: '请输入', trigger: ['blur', 'change'] }]
         }
       }
     },
@@ -125,6 +161,10 @@
     mounted() {
     },
     methods: {
+      formatTime(row, column, cellValue, index) {
+        return formatDate(cellValue)
+      },
+
       /** 搜索按钮操作 */
       handleQuery() {
         this.getList()
@@ -138,116 +178,55 @@
 
       /** 查询 */
       getList(type) {
-        if (type === 'rest') {
+        if (type == 'rest') {
           this.queryParams.pageNum = 1
           this.queryParams.pageSize = 10
         }
 
         console.log(this.queryParams)
-        this.loading = false
-
-        for (var i = 0; i < 12; i++){
-          this.list.push({
-            id: i,
-            Code: i++
-          })
-        }
-        this.total = this.list.length
-        return
+        this.loading = true
         page({
           pageNum: this.queryParams.pageNum,
           pageSize: this.queryParams.pageSize,
           param: {
-            activityName: this.queryParams.activityName
+            name: this.queryParams.name,
+            mobile: this.queryParams.mobile,
+            status: this.queryParams.status
           }
         }).then(res => {
           if (res.code == 200) {
-            this.list = res.data
-            this.total = res.total
+            this.list = res.data.data
+            this.total = res.data.total
           }
         }).finally(() => {
           this.loading = false
         })
       },
 
-      toPath(){
-        this.$router.push({ path: '/material/list', query: { id: "" } })
-      },
-
       /** 操作按钮集合 */
       handleInfo(type, scope) {
         console.log('typescope', type, scope)
         this.type = type
-        // if (type == 'edit') {
-        //  this.detailData = scope
-        // }
+        if (type == 'edit') {
+          this.form = scope
+        }
         this.visible = true
         this.loadingSave = false
       },
 
-      del(row){
-        this.$confirm('请确认是否删除？', '提示', {
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          type: 'warning'
-        }).then(() => {
-          this.loading = true
-          del({
-            id: row.id
-          }).then(res => {
-            if (res.code == 200) {
-              this.getList()
-            }
-          }).finally(() => {
-            this.loading = false
-          })
-        }).catch(() => {
-        })
-      },
-      restPassword(row){
-        this.$confirm('请确认是否重置密码？', '提示', {
-          confirmButtonText: '是',
-          cancelButtonText: '否',
-          type: 'warning'
-        }).then(() => {
-          this.loading = true
-          del({
-            id: row.id
-          }).then(res => {
-            if (res.code == 200) {
-              this.getList()
-            }
-          }).finally(() => {
-            this.loading = false
-          })
-        }).catch(() => {
-        })
-      },
-
       cancel() {
         this.visible = false
-        this.$refs['form'].resetFields();
+        this.$refs['form'].resetFields()
       },
 
       confirm() {
         console.log('this.form', this.form)
         this.$refs['form'].validate((valid) => {
           if (valid) {
-            this.cancel()
-            return
             this.loadingSave = true
-            if (!!this.form.id){
-              updateTemplateMessage(this.form).then(res => {
-                if (res.code === 200) {
-                  this.cancel()
-                  this.getList()
-                }
-              }).finally(() => {
-                this.loadingSave = false
-              })
-            } else {
-              templateMessage(this.form).then(res => {
-                if (res.code === 200) {
+            if (!!this.form.id) {
+              save(this.form).then(res => {
+                if (res.code == 200) {
                   this.cancel()
                   this.getList()
                 }
@@ -259,19 +238,40 @@
         })
       },
 
-      removeEmail(item) {
-        var index = this.form.emails.indexOf(item)
-        if (index !== -1) {
-          this.form.emails.splice(index, 1)
-        }
-      },
-      addEmail() {
-        this.form.emails.push({
-          value: '',
-          key: Date.now()
-        });
-      }
+      download() {
+        downExport().then(result => {
+          function change(t) {
+            if (t < 10) {
+              return '0' + t
+            } else {
+              return t
+            }
+          }
 
+          let d = new Date()
+          let year = d.getFullYear()
+          let month = change(d.getMonth() + 1)
+          let day = change(d.getDate())
+          let filename = '导出店铺-' + year + month + day
+          let blob = new Blob([result], { type: 'application/vnd.ms-excel' })
+          let url = window.URL.createObjectURL(blob)
+          if (window.navigator.msSaveBlob) {  //IE
+            try {
+              window.navigator.msSaveBlob(blob, filename)
+            } catch (e) {
+              console.log(e)
+            }
+          } else {  //非IE
+            let link = document.createElement('a')
+            link.style.display = 'none'
+            link.href = url
+            link.setAttribute('download', filename)
+            document.body.appendChild(link)
+            link.click()
+          }
+          URL.revokeObjectURL(url) // 释放内存
+        })
+      }
     }
   }
 </script>

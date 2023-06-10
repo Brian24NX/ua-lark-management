@@ -15,8 +15,7 @@
 
     <div class="pageRight">
       <div class="search backBg">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-position="top"
-                 v-show="showSearch">
+        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-position="top" v-show="showSearch">
           <el-row type="flex" justify="space-between" align="bottom">
             <el-col :xs="24" :span="20">
               <el-form-item label="Material/Code" prop="code">
@@ -96,7 +95,7 @@
               <template slot-scope="scope">
                 <el-button type="text" @click="sale('off', scope.row)"> Off-sale</el-button>
                 <el-button type="text" @click="sale('on', scope.row)">On-sale</el-button>
-                <el-button type="text" @click="handleInfo('Modify' ,scope.row)">Modify</el-button>
+                <el-button type="text" @click="handleInfo('edit' ,scope.row)">Modify</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -120,17 +119,17 @@
 
     <el-dialog title="Batch Import" :visible.sync="importVisible" width="780px" append-to-body
                :close-on-click-modal="false"
-               :close-on-press-escape="false" @closed="importClose">
+               :close-on-press-escape="false" @close="importClose">
       <div class="component-upload-file">
         <div class="component-upload-file-list">
 
-          <import-upload>
+          <imports>
             <div slot="tips" class="el-upload__text upload__text">Drag and drop materials files here or click to upload <em>click to upload</em></div>
-          </import-upload>
+          </imports>
 
-          <import-upload :accept="'.zip,.rar'">
+          <imports :accept="'.zip,.rar'">
             <div slot="tips" class="el-upload__text upload__text"> Drag and drop Image packages here or <em>click to upload </em></div>
-          </import-upload>
+          </imports>
 
         </div>
         <div class="component-upload-file-text">
@@ -157,7 +156,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="importClose">取消</el-button>
-        <el-button type="primary">确定</el-button>
+        <el-button type="primary" @click="importConfirm">确定</el-button>
       </span>
     </el-dialog>
 
@@ -167,7 +166,7 @@
 
 <script>
   import Hamburger from '@/components/Hamburger'
-  import importUpload from './importUpload'
+  import imports from './imports'
   import add from './add'
   import cateTree from './tree'
   import { page } from '@/api/material'
@@ -176,7 +175,7 @@
     name: 'materialList',
     components: {
       add,
-      importUpload,
+      imports,
       cateTree,
       Hamburger
     },
@@ -223,10 +222,17 @@
         })()
       }
     },
+    destroyed() {
+      window.onresize = null
+    },
     methods: {
 
       importClose() {
          this.importVisible = false
+      },
+
+      importConfirm() {
+        this.importVisible = false
       },
 
       downloadTemplate(){
@@ -439,7 +445,7 @@
   ::v-deep .upload__text {
     color: #7e8085;
     line-height: 1.7em;
-    margin-top: 15px;
+    margin: 15px 0;
 
     em {
       cursor: pointer;

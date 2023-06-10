@@ -140,7 +140,7 @@
   import ImportUpload from '@/components/ImportUpload'
 
   import add from './add'
-  import { page, del, publish } from '@/api/hvacEventManagementApi'
+  import { page, del, publish } from '@/api/store'
 
   export default {
     name: 'materialList',
