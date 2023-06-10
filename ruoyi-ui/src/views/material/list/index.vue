@@ -5,7 +5,7 @@
 
       <h2>
         <span>Material Category</span>
-        <hamburger id="categoryContainer" class="categoryContainer" @toggleClick="toggleSideBar" />
+        <hamburger id="categoryContainer" class="categoryContainer" @toggleClick="toggleSideBar"/>
       </h2>
       <div class="treeList">
         <cate-tree></cate-tree>
@@ -15,7 +15,8 @@
 
     <div class="pageRight">
       <div class="search backBg">
-        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-position="top" v-show="showSearch">
+        <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-position="top"
+                 v-show="showSearch">
           <el-row type="flex" justify="space-between" align="bottom">
             <el-col :xs="24" :span="20">
               <el-form-item label="Material/Code" prop="code">
@@ -30,13 +31,15 @@
 
               <el-form-item label="Supplier">
                 <el-select @change="getList('rest')" clearable v-model="queryParams.supplier">
-                  <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label" :value="dict.value"/>
+                  <el-option v-for="(dict, index) in supplierSelect" :key="index" :label="dict.label"
+                             :value="dict.value"/>
                 </el-select>
               </el-form-item>
 
               <el-form-item label="Status">
                 <el-select @change="getList('rest')" clearable v-model="queryParams.status">
-                  <el-option v-for="(dict, index) in statusSelect" :key="index" :label="dict.label" :value="dict.value"/>
+                  <el-option v-for="(dict, index) in statusSelect" :key="index" :label="dict.label"
+                             :value="dict.value"/>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -53,18 +56,18 @@
         <el-row class="mb10" type="flex" justify="space-between">
           <div>
             <el-button type="" :disabled="!handleSelection.length > 0 " @click="sale('all')">On Sale</el-button>
-            <el-button type="" :disabled="!handleSelection.length > 0 "  @click="sale('all')">Off Sale</el-button>
+            <el-button type="" :disabled="!handleSelection.length > 0 " @click="sale('all')">Off Sale</el-button>
           </div>
           <div>
             <el-button type="primary" icon="el-icon-plus" @click="handleInfo('add')">Add Material</el-button>
-            <el-button icon="el-icon-upload2" @click="openVisible = true">{{$t('import')}}</el-button>
+            <el-button icon="el-icon-upload2" @click="importVisible = true">{{$t('import')}}</el-button>
             <el-button icon="el-icon-download" @click="download">{{$t('export')}}</el-button>
           </div>
         </el-row>
 
         <div class="content">
           <el-table stripe ref="table" v-loading="loading" :data="list" @selection-change="handleSelectionChange">
-            <el-table-column fixed="left" type="selection" width="55" align="center" />
+            <el-table-column fixed="left" type="selection" width="55" align="center"/>
             <el-table-column label="Image" align="center" prop="Image" min-width="120">
               <template slot-scope="scope">
                 <img src="">
@@ -75,8 +78,8 @@
                 Material
               </template>
             </el-table-column>
-            <el-table-column label="Code" align="center" prop="Code" min-width="120" />
-            <el-table-column label="Category" align="center" prop="Category" min-width="120" />
+            <el-table-column label="Code" align="center" prop="Code" min-width="120"/>
+            <el-table-column label="Category" align="center" prop="Category" min-width="120"/>
             <el-table-column label="Specifications" align="center" prop="Specifications" min-width="120">
               <template slot-scope="scope">
                 <span>{{scope.row.published || '-'}}</span>
@@ -91,9 +94,9 @@
 
             <el-table-column label="Action" align="center" width="240" fixed="right">
               <template slot-scope="scope">
-                <el-button  type="text" @click="sale('off', scope.row)"> Off-sale </el-button>
-                <el-button  type="text" @click="sale('on', scope.row)">On-sale</el-button>
-                <el-button  type="text" @click="handleInfo('Modify' ,scope.row)">Modify</el-button>
+                <el-button type="text" @click="sale('off', scope.row)"> Off-sale</el-button>
+                <el-button type="text" @click="sale('on', scope.row)">On-sale</el-button>
+                <el-button type="text" @click="handleInfo('Modify' ,scope.row)">Modify</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -104,31 +107,76 @@
             <span style="margin-top: 45px;display: block;" v-if="handleSelection.length">Total：{{handleSelection.length}} materials</span>
           </div>
 
-          <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
+          <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum"
+                      :limit.sync="queryParams.pageSize" @pagination="getList"/>
         </el-row>
       </div>
     </div>
 
     <add v-if="visibleHandle" ref="eventListAdd" :pageType="pageType" :detailData="detailData" @emitInit="getList"/>
 
-<!--  导入   -->
-    <import-upload @openInt="openInt" :apiUrl="'/school/importStudentAccountData/'" :openVisible="openVisible"></import-upload>
+    <!--  导入   -->
+<!--    <import-upload :apiUrl="'/school/importStudentAccountData/'" ref="importUpload"></import-upload>-->
+
+    <el-dialog title="Batch Import" :visible.sync="importVisible" width="780px" append-to-body
+               :close-on-click-modal="false"
+               :close-on-press-escape="false" @closed="importClose">
+      <div class="component-upload-file">
+        <div class="component-upload-file-list">
+
+          <import-upload>
+            <div slot="tips" class="el-upload__text upload__text">Drag and drop materials files here or click to upload <em>click to upload</em></div>
+          </import-upload>
+
+          <import-upload :accept="'.zip,.rar'">
+            <div slot="tips" class="el-upload__text upload__text"> Drag and drop Image packages here or <em>click to upload </em></div>
+          </import-upload>
+
+        </div>
+        <div class="component-upload-file-text">
+          <dl>
+            <dt>Step1: Upload Material List</dt>
+            <dd>
+              <p>please download the template, complete and upload it<br/>
+                Note: Only. xlsx/. xls files can be uploaded. <em @click="downloadTemplate">Download templates</em></p>
+            </dd>
+            <dt>Step2: Prepare Image</dt>
+            <dd>
+              <p>please change all the image file name to be the same as Material SKU code, system will map the image
+                and
+                the SKU automatically. If matched image is not found, a default icon will be used for the material
+              </p>
+            </dd>
+            <dt>Step3: Upload Image packages</dt>
+            <dd>
+              <p>Package images into compressed files in rar or zip format and upload<br/>
+                Note: Only. rar/. zip files can be uploaded</p>
+            </dd>
+          </dl>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="importClose">取消</el-button>
+        <el-button type="primary">确定</el-button>
+      </span>
+    </el-dialog>
+
 
   </div>
 </template>
 
 <script>
   import Hamburger from '@/components/Hamburger'
-  import ImportUpload from '@/components/ImportUpload'
+  import importUpload from './importUpload'
   import add from './add'
   import cateTree from './tree'
-  import { page, del, categoryTree } from '@/api/material'
+  import { page } from '@/api/material'
 
   export default {
     name: 'materialList',
     components: {
       add,
-      ImportUpload,
+      importUpload,
       cateTree,
       Hamburger
     },
@@ -144,7 +192,7 @@
           code: '',
           category: '',
           supplier: '',
-          status: '',
+          status: ''
         },
         categorySelect: [],
         supplierSelect: [],
@@ -159,6 +207,9 @@
         pageType: '',
         visibleHandle: false,
         detailData: {},
+
+        // 导入
+        importVisible: false
       }
     },
 
@@ -168,14 +219,21 @@
     mounted() {
       window.onresize = () => {
         return (() => {
-           this.toggleSideBar()
-        })();
-      };
+          this.toggleSideBar()
+        })()
+      }
     },
     methods: {
 
-      toggleSideBar() {
+      importClose() {
+         this.importVisible = false
+      },
 
+      downloadTemplate(){
+
+      },
+
+      toggleSideBar() {
         if (document.querySelector('.treeBox').offsetWidth > 220) {
           document.querySelector('.treeBox').style.width = 220 + 'px'
           document.querySelector('.pageRight').style.width = document.querySelector('.app-container').offsetWidth - 220 + 'px'
@@ -184,17 +242,17 @@
           document.querySelector('.treeBox').style.width = wid + 20 + 'px'
           document.querySelector('.pageRight').style.width = document.querySelector('.app-container').offsetWidth - wid - 20 + 'px'
         }
-
       },
 
-      openInt(type){
+      openInt(type) {
         this.openVisible = false
-        if (type === 'getList'){
+        if (type === 'getList') {
           this.getList()
         }
       },
 
       download() {
+        return
         downStudentAccount(this.queryParams).then(result => {
           function change(t) {
             if (t < 10) {
@@ -209,7 +267,7 @@
           let month = change(d.getMonth() + 1)
           let day = change(d.getDate())
           let filename = 'Account Information ' + sessionStorage.getItem('academicSystemName') + year + month + day
-          let blob = new Blob([result], {type: 'application/vnd.ms-excel'})
+          let blob = new Blob([result], { type: 'application/vnd.ms-excel' })
           let url = window.URL.createObjectURL(blob)
           if (window.navigator.msSaveBlob) {  //IE
             try {
@@ -229,11 +287,10 @@
         })
       },
 
-
       // 多选框选中数据
       handleSelectionChange(selection) {
         this.handleSelection = selection.map(item => item.id)
-        console.log("this.handleSelection", this.handleSelection)
+        console.log('this.handleSelection', this.handleSelection)
       },
       /** 搜索按钮操作 */
       handleQuery() {
@@ -256,7 +313,7 @@
         console.log(this.queryParams)
         this.loading = false
 
-        for (var i = 0; i < 12; i++){
+        for (var i = 0; i < 12; i++) {
           this.list.push({
             id: i,
             Code: i++
@@ -300,7 +357,6 @@
           ids = [scope.id]
         }
 
-
         this.$confirm('请确认是否该操作？', '提示', {
           confirmButtonText: '是',
           cancelButtonText: '否',
@@ -334,27 +390,30 @@
 </script>
 
 <style lang="scss" scoped>
-.treeBox{
-  width: 220px;
-  margin: 0;
-  background: #fff;
-  height: calc(100vh - 80px);
-  float: left;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s;
-  h2{
-    font-size: 16px;
-    margin: 15px 10px;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    .categoryContainer{
-      padding: 0!important;
-      cursor: pointer;
+  .treeBox {
+    width: 220px;
+    margin: 0;
+    background: #fff;
+    height: calc(100vh - 80px);
+    float: left;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+
+    h2 {
+      font-size: 16px;
+      margin: 15px 10px;
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+
+      .categoryContainer {
+        padding: 0 !important;
+        cursor: pointer;
+      }
     }
   }
-}
-  .pageRight{
+
+  .pageRight {
     width: calc(100% - 220px);
     height: calc(100vh - 60px);
     transition: all 0.3s;
@@ -363,6 +422,7 @@
     position: relative;
     overflow-y: scroll;
     float: right;
+
     &::-webkit-scrollbar {
       width: 6px;
     }
@@ -373,6 +433,53 @@
     &::-webkit-scrollbar-thumb {
       background: #666;
       border-radius: 10px;
+    }
+  }
+
+  ::v-deep .upload__text {
+    color: #7e8085;
+    line-height: 1.7em;
+    margin-top: 15px;
+
+    em {
+      cursor: pointer;
+      color: #111;
+      display: block;
+      font-style: normal;
+    }
+  }
+
+  em {
+    cursor: pointer;
+    color: #111;
+    font-style: normal;
+  }
+
+  ::v-deep p {
+    margin: 5px 0;
+    color: #7e8085;
+    line-height: 1.7em;
+  }
+
+  ::v-deep dt {
+    color: #111;
+    margin-bottom: 10px;
+  }
+
+  .component-upload-file-list {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 45px;
+
+    .upload-demo {
+      width: auto;
+
+    }
+  }
+
+  .component-upload-file-text {
+    dd {
+      margin-bottom: 20px;
     }
   }
 </style>
